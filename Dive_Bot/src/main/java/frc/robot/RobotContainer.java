@@ -20,7 +20,6 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
-    public final static Intake intake = new Intake();
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -65,9 +64,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        
-        commandXBoxController.a().whileTrue(intake.inputCommand());
-        commandXBoxController.b().whileTrue(intake.outPutCommand());
     }
 
     /**
@@ -80,7 +76,4 @@ public class RobotContainer {
         return new exampleAuto(s_Swerve);
     }
 
-    private void setDefaultCommands() {
-        intake.setDefaultCommand(intake.stopMotorsCommand());
-    }
 }
