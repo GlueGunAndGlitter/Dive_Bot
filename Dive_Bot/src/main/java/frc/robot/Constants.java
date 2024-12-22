@@ -23,18 +23,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    public static final class Shooter{
-        public static final int BACK_MOTOR_ID = 0; 
-        public static final int FRONT_TOP_MOTOR_ID = 1; 
-        public static final int FRONT_BOTTOM_MOTOR_ID = 2;
-
-        public static final double shooterF = 0.015;
-        public static final double shooterP = 0.1;
-        public static final double shooterI = 0.0;
-        public static final double shooterD = 1.0;
-
-
-    }
+    
     public static final class Swerve {
         public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
         public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.2, 0.2, 0.1);    // Odometry trust factors
@@ -175,8 +164,4 @@ public final class Constants {
                 new ReplanningConfig());
     }
 
-    public static final class IntakeConstants {
-        public static final int FRONT_MOTOR_ID = 41;
-        public static final int BACK_MOTOR_ID = 42;
-    }
 }
