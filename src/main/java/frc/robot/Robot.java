@@ -4,6 +4,19 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -11,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,7 +45,9 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private RobotContainer robotContainer;
+
+  private Command autonomousCommand;
 
   boolean isRedAlliance;
   /**
@@ -42,8 +58,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
     smartDashboard();
+    warmupCommand().schedule();
+
 
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
@@ -79,12 +97,14 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
     }
+
+    // schedule the autonomous command (example)
   }
 
   /** This function is called periodically during autonomous. */
@@ -134,4 +154,25 @@ public class Robot extends TimedRobot {
         .withWidget(BuiltInWidgets.kTextView)
         .getEntry();
   }
+
+    public static Command warmupCommand() {
+    List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        new Pose2d(3.0, 3.0, new Rotation2d()), new Pose2d(6.0, 6.0, new Rotation2d()));
+    PathPlannerPath path = new PathPlannerPath(
+        bezierPoints,
+        new PathConstraints(4.0, 4.0, 4.0, 4.0),
+        new GoalEndState(0.0, Rotation2d.fromDegrees(90), true));
+
+    return new FollowPathHolonomic(
+        path,
+        Pose2d::new,
+        ChassisSpeeds::new,
+        (speeds) -> {
+        },
+        new HolonomicPathFollowerConfig(4.5, 0.4, new ReplanningConfig()),
+        () -> true)
+        .andThen(Commands.print("[PathPlanner] FollowPathCommand finished warmup"))
+        .ignoringDisable(true);
+  }
+
 }
