@@ -12,10 +12,15 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,6 +38,40 @@ public class Swerve extends SubsystemBase {
     private final AprilTag visionEstimator;
 
     public Swerve() {
+        try{
+          RobotConfig config = RobotConfig.fromGUISettings();
+    
+          // Configure AutoBuilder
+          AutoBuilder.configure(
+            this::getPose, 
+            this::resetPose, 
+            this::getSpeeds, 
+            this::driveRobotRelative, 
+            new PPHolonomicDriveController(
+              Constants.AutoConstants.translationConstants,
+              Constants.AutoConstants.rotationConstants
+            ),
+            config,
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            this
+          );
+        }catch(Exception e){
+          DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+        }
+
+
+
+        
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -47,7 +86,7 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(2, Constants.Swerve.Mod2.constants),
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
-
+        
         poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics,
             getGyroYaw(),
@@ -59,25 +98,7 @@ public class Swerve extends SubsystemBase {
 
         visionEstimator = new AprilTag(); // Initialize vision estimator
 
-        AutoBuilder.configureHolonomic(
-            this::getPose,
-            this::resetPose,
-            this::getSpeeds,
-            this::driveRobotRelative,
-            Constants.AutoConstants.pathFollowerConfig,
-            () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-            },
-             this);
 
 
     }
@@ -153,7 +174,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
     }
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {

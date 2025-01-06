@@ -3,9 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -145,20 +143,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3.5;
-
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-
-        /* Constraint for the motion profilied robot angle controller */
-
-        public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(10, 0.0, 1), // Translation PID constants
-                new PIDConstants(2, 0.005, 0.2), // Rotation constants
-                kMaxSpeedMetersPerSecond,
-                Swerve.robotRadius / 1000, // Drive base radius (distance from center to furthest module)
-                new ReplanningConfig());
+        public static final PIDConstants translationConstants = new PIDConstants(5.0, 0.0, 0.0);
+        public static final PIDConstants rotationConstants = new PIDConstants(5.0, 0.0, 0.0);
     }
 
 }

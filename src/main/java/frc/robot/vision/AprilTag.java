@@ -5,6 +5,8 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,7 +37,7 @@ public class AprilTag {
         secondCamera = new PhotonCamera("Second-Camera");
 
         // Load the field layout for AprilTag positions (e.g., for the 2024 game field)
-        aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
@@ -48,19 +50,24 @@ public class AprilTag {
         );
 
         // Initialize pose estimators with strategy and camera-to-robot transforms
-        poseEstimator1 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, aprilTagsCamera, robotToCam1);
-        poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, secondCamera, robotToCam2);
+        poseEstimator1 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam1);
+        poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
     }
 
     // Method to get the estimated pose, combining both camera inputs if available
     public Optional<Pose2d> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+
+        PhotonPipelineResult camera1Resolt = aprilTagsCamera.getLatestResult();
+        PhotonPipelineResult camera2Resolt = secondCamera.getLatestResult();
+
+
         // Set reference pose for both estimators
         poseEstimator1.setReferencePose(prevEstimatedRobotPose);
         poseEstimator2.setReferencePose(prevEstimatedRobotPose);
 
         // Get the pose estimates from both cameras
-        Optional<EstimatedRobotPose> pose1 = poseEstimator1.update();
-        Optional<EstimatedRobotPose> pose2 = poseEstimator2.update();
+        Optional<EstimatedRobotPose> pose1 = poseEstimator1.update(camera1Resolt);
+        Optional<EstimatedRobotPose> pose2 = poseEstimator2.update(camera2Resolt);
 
         // Combine or choose the best pose estimate based on availability
         if (pose1.isPresent() && pose2.isPresent()) {
