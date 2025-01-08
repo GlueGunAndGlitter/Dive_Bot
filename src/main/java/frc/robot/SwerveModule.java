@@ -1,10 +1,14 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -49,6 +53,42 @@ public class SwerveModule {
         mDriveMotor.getConfigurator().setPosition(0.0);
     }
 
+    
+    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants,boolean driveInverted,boolean angleInverted){
+        this.moduleNumber = moduleNumber;
+        this.angleOffset = moduleConstants.angleOffset;
+        
+        MotorOutputConfigs driveConfigs = new MotorOutputConfigs();
+        MotorOutputConfigs angleConfigs = new MotorOutputConfigs();
+        /* Angle Encoder Config */
+        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
+
+        /* Angle Motor Config */
+        mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+        mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
+        resetToAbsolute();
+        if (angleInverted) { 
+            angleConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+        } else {
+            angleConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        }
+        mAngleMotor.getConfigurator().apply(angleConfigs);
+
+        /* Drive Motor Config */
+        if (driveInverted) {
+            driveConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+        }else{
+            driveConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        }
+        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.getConfigurator().apply(driveConfigs);
+        mDriveMotor.getConfigurator().setPosition(0.0);
+    }
+
+
+    @SuppressWarnings("deprecation")
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
         mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
@@ -68,12 +108,14 @@ public class SwerveModule {
     }
 
     public Rotation2d getCANcoder(){
+
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
-    public void resetToAbsolute(){
-        double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
-        mAngleMotor.setPosition(absolutePosition);
+    public void resetToAbsolute()
+    {
+            double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
+            mAngleMotor.setPosition(absolutePosition);
     }
 
     public SwerveModuleState getState(){

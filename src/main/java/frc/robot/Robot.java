@@ -1,19 +1,14 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathfindingCommand;
-
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.Swerve;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,12 +17,6 @@ import frc.robot.Constants.Swerve;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static GenericEntry IntakeFrontMotorShufflebordSpeed;
-  public static GenericEntry IntakeBackMotorShufflebordSpeed;
-
-  public static GenericEntry ShooterBackMotorShufflebordSpeed;
-  public static GenericEntry ShooterFrontTopShufflebordSpeed;
-  public static GenericEntry ShooterFrontBottomShufflebordSpeed;
 
 
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
@@ -126,22 +115,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   public void smartDashboard () {
-    IntakeFrontMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("backSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-    IntakeBackMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("frontSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-        //shooter
-    ShooterBackMotorShufflebordSpeed = Shuffleboard.getTab("Shooter").add("BackSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-    ShooterFrontTopShufflebordSpeed = Shuffleboard.getTab("Shooter").add("frontSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-    ShooterFrontBottomShufflebordSpeed = Shuffleboard.getTab("Shooter").add("frontSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
+
   }
 
 

@@ -11,8 +11,8 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -20,10 +20,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.Optional;
@@ -39,15 +39,15 @@ public class Swerve extends SubsystemBase {
 
     public Swerve() {
         try{
-          RobotConfig config = RobotConfig.fromGUISettings();
-    
-          // Configure AutoBuilder
-          AutoBuilder.configure(
-            this::getPose, 
-            this::resetPose, 
-            this::getSpeeds, 
-            this::driveRobotRelative, 
-            new PPHolonomicDriveController(
+            RobotConfig config = RobotConfig.fromGUISettings();
+            
+            // Configure AutoBuilder
+            AutoBuilder.configure(
+                this::getPose, 
+                this::resetPose, 
+                this::getSpeeds, 
+                this::driveRobotRelative, 
+                new PPHolonomicDriveController(
               Constants.AutoConstants.translationConstants,
               Constants.AutoConstants.rotationConstants
             ),
@@ -56,7 +56,7 @@ public class Swerve extends SubsystemBase {
                 // Boolean supplier that controls when the path will be mirrored for the red alliance
                 // This will flip the path being followed to the red side of the field.
                 // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-    
+                
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()) {
                     return alliance.get() == DriverStation.Alliance.Red;
@@ -68,24 +68,27 @@ public class Swerve extends SubsystemBase {
         }catch(Exception e){
           DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
         }
-
+        
 
 
         
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
-
+        
         m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
-
-
+        
+        
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
             new SwerveModule(1, Constants.Swerve.Mod1.constants),
             new SwerveModule(2, Constants.Swerve.Mod2.constants),
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
+
         };
+
+        
         
         poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics,
@@ -170,7 +173,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroHeading(){
-        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        gyro.setYaw(0);
     }
 
     public Rotation2d getGyroYaw() {
@@ -200,6 +203,10 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
+        
+        System.out.println(mSwerveMods[0].getCANcoder().getRotations() - Constants.Swerve.Mod0.angleOffset.getRotations());
+        // System.out.println(mSwerveMods[3].getCANcoder().getRotations() - Constants.Swerve.Mod3.angleOffset.getRotations());
+
 
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
@@ -221,5 +228,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
+
+
     }
 }
