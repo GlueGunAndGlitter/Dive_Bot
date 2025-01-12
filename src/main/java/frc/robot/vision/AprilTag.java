@@ -37,7 +37,7 @@ public class AprilTag {
         secondCamera = new PhotonCamera("Second-Camera");
 
         // Load the field layout for AprilTag positions (e.g., for the 2024 game field)
-        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
