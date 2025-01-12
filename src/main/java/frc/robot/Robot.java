@@ -5,8 +5,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,6 +31,9 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   boolean isRedAlliance;
+
+  public static GenericEntry intakeFrontMotorShufflebordSpeed;
+  public static GenericEntry intakeBackMotorShufflebordSpeed;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -115,7 +121,12 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   public void smartDashboard () {
-
+    intakeFrontMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("backSpeed", 1)
+        .withWidget(BuiltInWidgets.kTextView)
+        .getEntry();
+    intakeBackMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("frontSpeed", 1)
+        .withWidget(BuiltInWidgets.kTextView)
+        .getEntry();
   }
 
 

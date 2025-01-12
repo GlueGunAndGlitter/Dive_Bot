@@ -34,12 +34,12 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton fghyuji = new JoystickButton(driver, XboxController.Button.kB.value);
 
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Elevator elevator = new Elevator();
+    private final Intake intake = new Intake();
 
 
     private final SendableChooser<Command> autoChooser;
@@ -79,6 +79,8 @@ public class RobotContainer {
     private void setDefaultCommands() {
 
         elevator.setDefaultCommand(elevator.stopMotorCommand());
+
+        intake.setDefaultCommand(intake.stopMotorsCommand());
 
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(

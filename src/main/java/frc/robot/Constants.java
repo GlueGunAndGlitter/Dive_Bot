@@ -24,6 +24,11 @@ public final class Constants {
         public static final double KP_POSITION_PID = 0;
         
     }
+    
+    public static final class IntakeConstants {
+        public static final int FRONT_MOTOR_ID = 0;
+        public static final int BACK_MOTOR_ID = 0;
+    }
 
     public static final class Swerve {
         public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
