@@ -19,6 +19,15 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
 
+
+    public static final class ArmAngleChangeConstants {
+        public static final int ArmAngleChange_Motor_ID =0;
+        public static final double  KP_POSITION_PID = 0;
+        public static final double  KI_POSITION_PID = 0;
+        public static final double  KD_POSITION_PID = 0;
+    }
+
+
     public static final class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 31;
         public static final double KP_POSITION_PID = 0;

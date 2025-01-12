@@ -40,6 +40,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Elevator elevator = new Elevator();
+    private final ArmAngleChange armAngleChange = new ArmAngleChange();
+
 
 
     private final SendableChooser<Command> autoChooser;
@@ -77,6 +79,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     private void setDefaultCommands() {
+
+        armAngleChange.setDefaultCommand(armAngleChange.stopMotorCommand());
 
         elevator.setDefaultCommand(elevator.stopMotorCommand());
 
