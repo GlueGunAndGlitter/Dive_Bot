@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +18,7 @@ public class Elevator extends SubsystemBase {
 
 
   TalonFX elevatorMotor;
-
+  public TalonFXConfiguration motorConfig;
   PIDController positionPID;
 
   public Elevator() {
@@ -24,7 +26,12 @@ public class Elevator extends SubsystemBase {
     elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID);
 
     positionPID = new PIDController(Constants.ElevatorConstants.KP_POSITION_PID , 0, 0);
+
+        motorConfig = new TalonFXConfiguration();
+      motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+      elevatorMotor.getConfigurator().apply(motorConfig);
   }
+  
   
   
   /**

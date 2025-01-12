@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,14 +17,16 @@ import frc.robot.Constants;
 public class ArmAngleChange extends SubsystemBase {
   /** Creates a new ArmAngleChange. */
   
-  TalonFX ArmAngleChangeMotor;
-
+  TalonFX armAngleChangeMotor;
   PIDController positionPID;
+  public TalonFXConfiguration motorConfig;
 
   public ArmAngleChange() {
-    ArmAngleChangeMotor = new TalonFX(Constants.ArmAngleChangeConstants.ArmAngleChange_Motor_ID);
+    armAngleChangeMotor = new TalonFX(Constants.ArmAngleChangeConstants.ArmAngleChange_Motor_ID);
     positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
-
+    motorConfig = new TalonFXConfiguration();
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    armAngleChangeMotor.getConfigurator().apply(motorConfig);
   }
 
     public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
@@ -31,12 +36,14 @@ public class ArmAngleChange extends SubsystemBase {
   }
 
 
+
+
   public Command stopMotorCommand(){
-    return this.run(()-> ArmAngleChangeMotor.stopMotor());
+    return this.run(()-> armAngleChangeMotor.stopMotor());
   }
 
   public Command setPositionCommand(){
-    return this.run(() -> setPosition(ArmAngleChangeMotor, 0, 0));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0, 0));
   }
 
 
