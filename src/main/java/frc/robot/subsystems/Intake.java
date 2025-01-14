@@ -38,13 +38,13 @@ public class Intake extends SubsystemBase {
   }
 
   private void input() {
-    frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
-    backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
+  //   frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
+  //   backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
   }
 
   private void outPut() {
-    frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
-    backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
+  //   frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
+  //   backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
   }
 
   private void stopMotors() {

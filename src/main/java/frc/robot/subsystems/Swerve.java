@@ -204,7 +204,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         
-        System.out.println(mSwerveMods[0].getCANcoder().getRotations() - Constants.Swerve.Mod0.angleOffset.getRotations());
+        // System.out.println(mSwerveMods[0].getCANcoder().getRotations() - Constants.Swerve.Mod0.angleOffset.getRotations());
         // System.out.println(mSwerveMods[3].getCANcoder().getRotations() - Constants.Swerve.Mod3.angleOffset.getRotations());
 
 

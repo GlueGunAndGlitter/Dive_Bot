@@ -31,9 +31,11 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   boolean isRedAlliance;
+  
+  public static GenericEntry intakeHigherMotorSpeed;
 
-  public static GenericEntry intakeFrontMotorShufflebordSpeed;
-  public static GenericEntry intakeBackMotorShufflebordSpeed;
+
+  // public static GenericEntry randomPosition;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    
     robotContainer = new RobotContainer();
     smartDashboard();
 
@@ -108,7 +111,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -120,14 +124,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 
-  public void smartDashboard () {
-    intakeFrontMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("backSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-    intakeBackMotorShufflebordSpeed = Shuffleboard.getTab("Intake").add("frontSpeed", 1)
-        .withWidget(BuiltInWidgets.kTextView)
-        .getEntry();
-  }
 
+  public void smartDashboard() {
+    intakeHigherMotorSpeed = Shuffleboard.getTab("Transportation").add("Higher motor speed", 0.7)
+    .withWidget(BuiltInWidgets.kTextView)
+    .getEntry();
+  }
 
 }

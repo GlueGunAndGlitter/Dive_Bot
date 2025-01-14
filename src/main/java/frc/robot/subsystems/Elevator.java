@@ -6,12 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -27,9 +29,12 @@ public class Elevator extends SubsystemBase {
 
     positionPID = new PIDController(Constants.ElevatorConstants.KP_POSITION_PID , 0, 0);
 
-        motorConfig = new TalonFXConfiguration();
-      motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-      elevatorMotor.getConfigurator().apply(motorConfig);
+    motorConfig = new TalonFXConfiguration();
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    elevatorMotor.getConfigurator().apply(motorConfig);
+
+
   }
   
   
@@ -48,10 +53,21 @@ public class Elevator extends SubsystemBase {
   }
 
 
-  public Command test(){
-    return this.run(() -> setPosition(elevatorMotor, 0.3, 45));
+  public Command zeroPositionCommand(){
+    return this.run(() -> setPosition(elevatorMotor, 0.2, 0.1));
+  }
+  
+  public Command elevatorL2Command(){
+    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L2_POSITION));
   }
 
+  public Command elevatorL3Command(){
+    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L3_POSITION));
+  }
+  
+  public Command elevatorL4Command(){
+    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L4_POSITION));
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
