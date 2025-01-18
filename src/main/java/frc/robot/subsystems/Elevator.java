@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase {
     return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L3_POSITION));
   }
   
-  public Command elevatorL4Command(){
+  public Command  elevatorL4Command(){
     return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L4_POSITION));
   }
   @Override

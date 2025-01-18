@@ -54,8 +54,9 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        
+        registerCommand();
         setDefaultCommands();
+        
         // Configure the button bindings
         configureButtonBindings();
 ;
@@ -63,7 +64,7 @@ public class RobotContainer {
         
 
         SmartDashboard.putData("Auto Mode", autoChooser);
-        registerCommand();
+        
         
     }
     
@@ -111,7 +112,7 @@ public class RobotContainer {
             return elevator.elevatorL3Command()
             .alongWith(armAngleChange.setL2L3PositionCommand())
             .alongWith(new WaitCommand(3)
-            .andThen(arm.intakCommand()));
+            .andThen(arm.intakCommand()).withTimeout(5));
           }
     
         public Command L4(){
@@ -152,7 +153,9 @@ public class RobotContainer {
         }
     
     void registerCommand(){
-            NamedCommands.registerCommand("nukePlzWork", L3());
+            NamedCommands.registerCommand("L3Auto", L3());
+            
+            
     }
 
 
