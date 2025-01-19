@@ -168,6 +168,11 @@ public final class Constants {
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
     }
+    public static final class  LEDConstants {
+        public static final int LED_PORT = 0;
+        public static final int LED_LENGTH = 60;
+        
+    }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final PIDConstants translationConstants = new PIDConstants(10.0, 0.0, 0);
