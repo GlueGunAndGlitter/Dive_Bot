@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.*;
+import frc.robot.vision.ObjectDetection;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,6 +46,7 @@ public class RobotContainer {
     public static final Intake intake = new Intake();
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
+    public static final ObjectDetection objectDetection = new ObjectDetection();
 
 
 
