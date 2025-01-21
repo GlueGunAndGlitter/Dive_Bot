@@ -82,7 +82,7 @@ public class RobotContainer {
         //commandXBoxController.a().whileTrue(elevator.testUp());
         //commandXBoxController.b().whileTrue(elevator.testDown());
         commandXBoxController.rightBumper().whileTrue(intake());
-        // commandXBoxController.leftBumper().whileTrue(arm.outCommand());
+        commandXBoxController.leftBumper().whileTrue(elevator.elevatorCommand());
         //commandXBoxController.y().whileTrue(armAngleChange.setIntakePositionCommand());
         //commandXBoxController.x().whileTrue(armAngleChange.l4AngleCommand());
         

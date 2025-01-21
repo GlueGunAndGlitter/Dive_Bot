@@ -68,6 +68,10 @@ public class Elevator extends SubsystemBase {
   public Command  elevatorL4Command(){
     return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L4_POSITION));
   }
+
+  public Command  elevatorCommand(){
+return this.run(()-> setPosition(elevatorMotor,1, 49));
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
