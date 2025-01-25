@@ -70,7 +70,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command  elevatorCommand(){
-return this.run(()-> setPosition(elevatorMotor,1, 49));
+return this.run(()-> setPosition(elevatorMotor,1, 13));
   }
   @Override
   public void periodic() {
