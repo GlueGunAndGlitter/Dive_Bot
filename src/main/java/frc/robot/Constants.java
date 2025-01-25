@@ -9,6 +9,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -46,6 +47,13 @@ public final class Constants {
         public static final int BACK_MOTOR_ID = 0;
     }
 
+    public static final class AprilTagConstants {
+        public static final Translation3d cam1Positoin = new Translation3d(0,0,0);
+        public static final Translation3d cam2Positoin = new Translation3d(0,0,0);
+
+
+
+    }
     public static final class Swerve {
         public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
         public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.2, 0.2, 0.1);    // Odometry trust factors

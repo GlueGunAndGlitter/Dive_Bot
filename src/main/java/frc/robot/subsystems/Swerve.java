@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
-import frc.robot.vision.AprilTag;
+import frc.robot.vision.AprilTagVision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -35,7 +35,7 @@ public class Swerve extends SubsystemBase {
     private final Field2d m_field;
     
 
-    private final AprilTag visionEstimator;
+    private final AprilTagVision visionEstimator;
 
     public Swerve() {
         try{
@@ -99,7 +99,7 @@ public class Swerve extends SubsystemBase {
             Constants.Swerve.odomStdDevs    // Standard deviations for odometry
         );
 
-        visionEstimator = new AprilTag(); // Initialize vision estimator
+        visionEstimator = new AprilTagVision(); // Initialize vision estimator
 
 
 
