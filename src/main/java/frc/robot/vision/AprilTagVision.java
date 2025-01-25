@@ -13,8 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.Constants;
 
-public class AprilTag {
+public class AprilTagVision {
 
     // Cameras for AprilTag detection
     private final PhotonCamera aprilTagsCamera;
@@ -31,7 +32,7 @@ public class AprilTag {
     private final PhotonPoseEstimator poseEstimator1;
     private final PhotonPoseEstimator poseEstimator2;
 
-    public AprilTag() {
+    public AprilTagVision() {
         // Initialize cameras
         aprilTagsCamera = new PhotonCamera("AprilTags_side_Camera");
         secondCamera = new PhotonCamera("Second-Camera");
@@ -41,18 +42,50 @@ public class AprilTag {
 
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
-            new Translation3d(0.4, -0.265, 0.17), 
+            Constants.AprilTagConstants.cam1Positoin,
             new Rotation3d(Math.toRadians(180), Math.toRadians(24), 0)
         );
         robotToCam2 = new Transform3d(
-            new Translation3d(-0.5, 0.0, 0.5), 
+            Constants.AprilTagConstants.cam2Positoin,
             new Rotation3d(0, 0, 0)
         );
+
+
 
         // Initialize pose estimators with strategy and camera-to-robot transforms
         poseEstimator1 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam1);
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
     }
+
+    public double getAprilTagDistanceFromRobotCentre(int aprilTag_ID){
+        var firstCameraResult = aprilTagsCamera.getAllUnreadResults();
+        var secondCameraResult = secondCamera.getAllUnreadResults();
+
+            if (!firstCameraResult.isEmpty()) {
+                double distenceYAxis = firstCameraResult.get(0).getBestTarget().getBestCameraToTarget().getY();
+
+                return Constants.AprilTagConstants.cam1Positoin.getY() - distenceYAxis;
+
+                
+            }else if (!secondCameraResult.isEmpty()){
+                double distenceYAxis = secondCameraResult.get(0).getBestTarget().getBestCameraToTarget().getY();
+
+
+                return Constants.AprilTagConstants.cam2Positoin.getY() - distenceYAxis;
+
+            }
+            
+            else {
+                return 0;
+            }
+        }
+
+        public boolean hasTarget(){
+            var resolt = aprilTagsCamera.getAllUnreadResults();
+            return !resolt.isEmpty();
+        }
+
+
 
     // Method to get the estimated pose, combining both camera inputs if available
     public Optional<Pose2d> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
