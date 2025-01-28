@@ -168,7 +168,7 @@ public final class Constants {
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
     }
-    public static final class  LEDConstants {
+    public static final class LEDConstants {
         public static final int LED_PORT = 0;
         public static final int LED_LENGTH = 60;
         
@@ -179,4 +179,9 @@ public final class Constants {
         public static final PIDConstants rotationConstants = new PIDConstants(10.0, 0.0, 0);
     }
 
+    public static final class ClimbConstants {
+        public static final int MOTOR_1 = 52;
+        public static final int MOTOR_2 = 19;   
+        
+    }
 }

@@ -29,6 +29,7 @@ public class RobotContainer {
     private final Joystick driver = new Joystick(0);
 
     public static final CommandXboxController commandXBoxController = new CommandXboxController(0);
+    public static final XboxController xboxController = new XboxController(0);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -47,6 +48,7 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final ObjectDetection objectDetection = new ObjectDetection();
+    public static final Climb climb = new Climb();
 
 
 
