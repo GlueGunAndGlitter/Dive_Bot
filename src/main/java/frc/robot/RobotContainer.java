@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.*;
+import frc.robot.vision.AprilTagVision;
 import frc.robot.vision.ObjectDetection;
 
 /**
@@ -48,7 +50,11 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final ObjectDetection objectDetection = new ObjectDetection();
+<<<<<<< HEAD
     public static final Climb climb = new Climb();
+=======
+    public static final AprilTagVision aprilTag = new AprilTagVision();
+>>>>>>> 46e12ecf47ebd48aa252efa3e50e9f7d616a4306
 
 
 
