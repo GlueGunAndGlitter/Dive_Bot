@@ -25,7 +25,7 @@ public class ReefAsisst extends Command {
   DoubleSupplier rotationSup;
   /** Creates a new ReefAsisst. */
   public ReefAsisst(DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
-    controller = new PIDController(0, 0, 0);
+    controller = new PIDController(1, 0, 0);
 
     //apply deadband 
     this.translationX = translationX;
@@ -50,8 +50,8 @@ public class ReefAsisst extends Command {
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
-  double output = controller.calculate(RobotContainer.aprilTag.getAprilTagDistanceFromRobotCentre(0),0);
-
+  double output = controller.calculate(RobotContainer.aprilTag.getAprilTagDistanceFromRobotCentre(),0);
+    System.out.println(output);
     if (RobotContainer.aprilTag.hasTarget()) {
       RobotContainer.s_Swerve.drive(
         new Translation2d(translationVal, output).times(Constants.Swerve.maxSpeed), 

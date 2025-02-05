@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ReefAsisst;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
@@ -50,11 +51,8 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final ObjectDetection objectDetection = new ObjectDetection();
-<<<<<<< HEAD
     public static final Climb climb = new Climb();
-=======
     public static final AprilTagVision aprilTag = new AprilTagVision();
->>>>>>> 46e12ecf47ebd48aa252efa3e50e9f7d616a4306
 
 
 
@@ -91,15 +89,10 @@ public class RobotContainer {
         //commandXBoxController.a().whileTrue(elevator.testUp());
         //commandXBoxController.a().whileTrue(elevator.testUp());
         //commandXBoxController.b().whileTrue(elevator.testDown());
-        commandXBoxController.rightBumper().whileTrue(intake());
-        commandXBoxController.leftBumper().whileTrue(elevator.elevatorCommand());
-        //commandXBoxController.y().whileTrue(armAngleChange.setIntakePositionCommand());
-        //commandXBoxController.x().whileTrue(armAngleChange.l4AngleCommand());
-        
-        commandXBoxController.a().whileTrue(L1());
-        commandXBoxController.x().whileTrue(L2());
-        commandXBoxController.y().whileTrue(L3());
-        commandXBoxController.b().whileTrue(L4());
+        commandXBoxController.rightBumper().whileTrue(new ReefAsisst(
+        () -> -driver.getRawAxis(translationAxis), 
+        () -> -driver.getRawAxis(strafeAxis), 
+        () -> -driver.getRawAxis(rotationAxis)));
     }
     public Command intake() {
         return armAngleChange.setIntakePositionCommand()

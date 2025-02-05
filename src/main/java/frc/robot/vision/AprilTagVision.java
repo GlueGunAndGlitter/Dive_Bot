@@ -34,7 +34,7 @@ public class AprilTagVision {
 
     public AprilTagVision() {
         // Initialize cameras
-        aprilTagsCamera = new PhotonCamera("AprilTags_side_Camera");
+        aprilTagsCamera = new PhotonCamera("AprilTags_Camera_1");
         secondCamera = new PhotonCamera("Second-Camera");
 
         // Load the field layout for AprilTag positions (e.g., for the 2024 game field)
@@ -57,18 +57,18 @@ public class AprilTagVision {
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
     }
 
-    public double getAprilTagDistanceFromRobotCentre(int aprilTag_ID){
-        var firstCameraResult = aprilTagsCamera.getAllUnreadResults();
-        var secondCameraResult = secondCamera.getAllUnreadResults();
+    public double getAprilTagDistanceFromRobotCentre(){
+        var firstCameraResult = aprilTagsCamera.getLatestResult();
+        var secondCameraResult = secondCamera.getLatestResult();
 
-            if (!firstCameraResult.isEmpty()) {
-                double distenceYAxis = firstCameraResult.get(0).getBestTarget().getBestCameraToTarget().getY();
+            if (firstCameraResult.hasTargets()) {
+                double distenceYAxis = firstCameraResult.getTargets().get(0).getBestCameraToTarget().getY();
 
                 return Constants.AprilTagConstants.cam1Positoin.getY() - distenceYAxis;
 
                 
-            }else if (!secondCameraResult.isEmpty()){
-                double distenceYAxis = secondCameraResult.get(0).getBestTarget().getBestCameraToTarget().getY();
+            }else if (secondCameraResult.hasTargets()){
+                double distenceYAxis = secondCameraResult.getTargets().get(0).getBestCameraToTarget().getY();
 
 
                 return Constants.AprilTagConstants.cam2Positoin.getY() - distenceYAxis;
@@ -80,10 +80,12 @@ public class AprilTagVision {
             }
         }
 
-        public boolean hasTarget(){
-            var resolt = aprilTagsCamera.getAllUnreadResults();
-            return !resolt.isEmpty();
-        }
+    public boolean hasTarget(){
+        var firstCameraResult = aprilTagsCamera.getLatestResult();
+        var secondCameraResult = secondCamera.getLatestResult();
+        return firstCameraResult.hasTargets() || secondCameraResult.hasTargets();
+
+    }
 
 
 
