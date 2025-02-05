@@ -13,26 +13,29 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
 
 
-  TalonFX elevatorMotor;
+  TalonFX elevatorMotor1;
+  TalonFX elevatorMotor2;
+
   public TalonFXConfiguration motorConfig;
   PIDController positionPID;
 
   public Elevator() {
 
-    elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID);
+    elevatorMotor1 = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR1_ID);
+    elevatorMotor2 = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR2_ID);
 
     positionPID = new PIDController(Constants.ElevatorConstants.KP_POSITION_PID , 0, 0);
 
     motorConfig = new TalonFXConfiguration();
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    elevatorMotor.getConfigurator().apply(motorConfig);
+    elevatorMotor1.getConfigurator().apply(motorConfig);
+    elevatorMotor2.getConfigurator().apply(motorConfig);
 
 
   }
@@ -48,29 +51,38 @@ public class Elevator extends SubsystemBase {
     motor.set(speed);
   }
 
+
+  public void set2MotorsPosition(double maxSpeed, double wantedPosition){
+    setPosition(elevatorMotor1, maxSpeed, wantedPosition);
+    setPosition(elevatorMotor2, maxSpeed, wantedPosition);
+  }
   public Command stopMotorCommand(){
-    return this.run(()-> elevatorMotor.stopMotor());
+    return this.run(()-> set2MotorsPosition(0, 0));
   }
 
 
   public Command zeroPositionCommand(){
-    return this.run(() -> setPosition(elevatorMotor, 0.2, 0.1));
+    return this.run(()-> set2MotorsPosition(0, 0));
+
   }
   
   public Command elevatorL2Command(){
-    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L2_POSITION));
+    return this.run(()-> set2MotorsPosition(0, 0));
+
   }
 
   public Command elevatorL3Command(){
-    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L3_POSITION));
+    return this.run(()-> set2MotorsPosition(0, 0));
+
   }
   
   public Command  elevatorL4Command(){
-    return this.run(()-> setPosition(elevatorMotor,0.2, Constants.ElevatorConstants.L4_POSITION));
+    return this.run(()-> set2MotorsPosition(0, 0));
+
   }
 
   public Command  elevatorCommand(){
-return this.run(()-> setPosition(elevatorMotor,1, 13));
+    return this.run(()-> set2MotorsPosition(0, 0));
   }
   @Override
   public void periodic() {
