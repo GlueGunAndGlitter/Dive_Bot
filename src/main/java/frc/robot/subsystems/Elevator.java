@@ -57,6 +57,10 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  public double getPosition(){
+    return elevatorMotor1.getPosition().getValueAsDouble();
+  }
+
 
   public void set2MotorsPosition(double maxSpeed, double wantedPosition){
     setPosition(elevatorMotor1, maxSpeed, wantedPosition);
@@ -78,17 +82,17 @@ public class Elevator extends SubsystemBase {
   }
   
   public Command elevatorL2Command(){
-    return this.run(()-> set2MotorsPosition(0.3, 5.5));
+    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L2_POSITION));
 
   }
 
   public Command elevatorL3Command(){
-    return this.run(()-> set2MotorsPosition(0.3, 14));
+    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L3_POSITION));
 
   }
   
   public Command  elevatorL4Command(){
-    return this.run(()-> set2MotorsPosition(0.3, 14.8));
+    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L4_POSITION));
 
   }
 

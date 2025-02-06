@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.nio.channels.ConnectionPendingException;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -14,8 +16,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ReefAsisst;
+import frc.robot.commands.CondionalArmChangeCommand;
+import frc.robot.commands.OutL1Command;
+import frc.robot.commands.OutL2Command;
+import frc.robot.commands.OutL3Command;
+import frc.robot.commands.OutL4Command;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.autoTelopCommands.ReefAsisst;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
 import frc.robot.vision.ObjectDetection;
@@ -105,30 +112,26 @@ public class RobotContainer {
     }
     public Command L1(){
        return armAngleChange.setL1PositionCommand()
-       .alongWith(new WaitCommand(1)
-       .andThen(arm.L1Output()));
+       .alongWith(new OutL1Command());
     }
 
     public Command L2(){
         return elevator.elevatorL2Command()
         .alongWith(armAngleChange.setL2L3PositionCommand())
-        .alongWith(new WaitCommand(1)
-        .andThen(arm.normalOutCommand()));
+        .alongWith(new OutL2Command());
     }
 
     public Command L3(){
             return elevator.elevatorL3Command()
             .alongWith(armAngleChange.setL2L3PositionCommand())
-            .alongWith(new WaitCommand(0.5)
-            .andThen(arm.normalOutCommand()).withTimeout(5));
+            .alongWith(new OutL3Command());
           }
     
         public Command L4(){
             return elevator.elevatorL4Command()
-            .alongWith(new WaitCommand(1.5)
+            .alongWith(new CondionalArmChangeCommand()
             .andThen(armAngleChange.setL4PositionCommand()))
-            .alongWith(new WaitCommand(4)
-            .andThen(arm.outCommand()));
+            .alongWith(new OutL4Command());
         }
         
         /**
