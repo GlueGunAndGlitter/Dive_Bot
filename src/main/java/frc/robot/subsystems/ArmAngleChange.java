@@ -48,17 +48,17 @@ public class ArmAngleChange extends SubsystemBase {
   }
 
   public Command setIntakePositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, 2.5));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.INTAKE_POSITION));
   }
   public Command setL1PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -7.5));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION));
   }
   public Command setL4PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.4, 54));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.7, Constants.ArmAngleChangeConstants.L4_POSITION));
   }
 
   public Command setL2L3PositionCommand() {
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -5));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_L3_ANGLE_POSITION));
   }
 
   public double getPosition(){
