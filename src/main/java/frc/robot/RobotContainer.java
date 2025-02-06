@@ -47,7 +47,8 @@ public class RobotContainer {
     /* Subsystems */
     public static final Swerve s_Swerve = new Swerve();
     public static final Elevator elevator = new Elevator();
-    public static final Intake intake = new Intake();
+    public static final IntakeAlgeaChangAngle intakeAlgeaChangAngle = new IntakeAlgeaChangAngle();
+    public static final IntakeAlgea intake = new IntakeAlgea();
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final ObjectDetection objectDetection = new ObjectDetection();
@@ -144,7 +145,8 @@ public class RobotContainer {
             elevator.setDefaultCommand(elevator.zeroPositionCommand());
     
             intake.setDefaultCommand(intake.stopMotorsCommand());
-    
+            
+            intakeAlgeaChangAngle.setDefaultCommand(intakeAlgeaChangAngle.zeroPositionAlgeaCommand());
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 

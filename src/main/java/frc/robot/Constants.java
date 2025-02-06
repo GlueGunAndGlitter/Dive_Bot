@@ -18,6 +18,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+    
+
 
     public static final class AutonomousConstants {
         public static final PIDConstants REEF_ASISST = new PIDConstants(0, 0);
@@ -48,9 +50,14 @@ public final class Constants {
         
     }
     
-    public static final class IntakeConstants {
-        public static final int FRONT_MOTOR_ID = 61;
-        public static final int BACK_MOTOR_ID = 62;
+    public static final class IntakeAlgeaChangAngle {
+        public static final int INTAKE_ALGEA_ID = 0;
+    }
+
+    public static final class IntakeAlgeaConstants {
+
+        public static final int INTAKE_ALGEA_ID_MOTOR = 0;
+
     }
 
     public static final class AprilTagConstants {
@@ -192,5 +199,7 @@ public final class Constants {
         public static final PIDConstants translationConstants = new PIDConstants(10.0, 0.0, 0);
         public static final PIDConstants rotationConstants = new PIDConstants(10.0, 0.0, 0);
     }
+
+  
 
 }
