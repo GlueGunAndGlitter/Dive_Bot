@@ -51,7 +51,7 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final ObjectDetection objectDetection = new ObjectDetection();
-    public static final Climb climb = new Climb();
+    //public static final Climb climb = new Climb();
     public static final AprilTagVision aprilTag = new AprilTagVision();
 
 
@@ -89,10 +89,14 @@ public class RobotContainer {
         //commandXBoxController.a().whileTrue(elevator.testUp());
         //commandXBoxController.a().whileTrue(elevator.testUp());
         //commandXBoxController.b().whileTrue(elevator.testDown());
-        commandXBoxController.rightBumper().whileTrue(new ReefAsisst(
-        () -> -driver.getRawAxis(translationAxis), 
-        () -> -driver.getRawAxis(strafeAxis), 
-        () -> -driver.getRawAxis(rotationAxis)));
+       commandXBoxController.a().whileTrue(L1());
+       commandXBoxController.b().whileTrue(L2());
+       commandXBoxController.y().whileTrue(L3());
+       commandXBoxController.x().whileTrue(L4());
+        commandXBoxController.rightBumper().whileTrue(intake());
+    }
+    public Command ElevatorTest(){
+        return elevator.elevatorCommand();
     }
     public Command intake() {
         return armAngleChange.setIntakePositionCommand()
@@ -108,14 +112,14 @@ public class RobotContainer {
         return elevator.elevatorL2Command()
         .alongWith(armAngleChange.setL2L3PositionCommand())
         .alongWith(new WaitCommand(1)
-        .andThen(arm.intakCommand()));
+        .andThen(arm.normalOutCommand()));
     }
 
     public Command L3(){
             return elevator.elevatorL3Command()
             .alongWith(armAngleChange.setL2L3PositionCommand())
-            .alongWith(new WaitCommand(3)
-            .andThen(arm.intakCommand()).withTimeout(5));
+            .alongWith(new WaitCommand(0.5)
+            .andThen(arm.normalOutCommand()).withTimeout(5));
           }
     
         public Command L4(){

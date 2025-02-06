@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -47,17 +48,21 @@ public class ArmAngleChange extends SubsystemBase {
   }
 
   public Command setIntakePositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -15));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, 2.5));
   }
   public Command setL1PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, 4));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -7.5));
   }
   public Command setL4PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -65));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.4, 54));
   }
 
   public Command setL2L3PositionCommand() {
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_L3_ANGLE_POSITION));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, -5));
+  }
+
+  public double getPosition(){
+    return armAngleChangeMotor.getPosition().getValueAsDouble();
   }
 
 
@@ -65,6 +70,7 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(armAngleChangeMotor.getPosition().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 }

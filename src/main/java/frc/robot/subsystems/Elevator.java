@@ -8,11 +8,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -48,7 +50,11 @@ public class Elevator extends SubsystemBase {
   public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
     double PIDOutput = positionPID.calculate(motor.getPosition().getValueAsDouble(), wantedPosition);
     double speed = Math.signum(PIDOutput) * Math.min(maxSpeed, Math.abs(PIDOutput));
-    motor.set(speed);
+    if (motor.getPosition().getValueAsDouble() < wantedPosition/2 && maxSpeed != 0){
+      motor.set(1);
+    }else{
+      motor.set(speed);
+    }
   }
 
 
@@ -56,36 +62,46 @@ public class Elevator extends SubsystemBase {
     setPosition(elevatorMotor1, maxSpeed, wantedPosition);
     setPosition(elevatorMotor2, maxSpeed, wantedPosition);
   }
-  public Command stopMotorCommand(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+
+
+  private void zeroPosition(){
+    if (Math.abs(RobotContainer.armAngleChange.getPosition()) < 8) {
+      set2MotorsPosition(0.1, 0);
+    }else{
+      set2MotorsPosition(0, 0);
+
+    }
   }
-
-
   public Command zeroPositionCommand(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+    return this.run(() -> zeroPosition());
 
   }
   
   public Command elevatorL2Command(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+    return this.run(()-> set2MotorsPosition(0.3, 5.5));
 
   }
 
   public Command elevatorL3Command(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+    return this.run(()-> set2MotorsPosition(0.3, 14));
 
   }
   
   public Command  elevatorL4Command(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+    return this.run(()-> set2MotorsPosition(0.3, 14.8));
 
   }
 
   public Command  elevatorCommand(){
-    return this.run(()-> set2MotorsPosition(0, 0));
+    return this.run(()-> set2MotorsPosition(1, 14.8));
   }
+  
+
+
+
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
   }
 }

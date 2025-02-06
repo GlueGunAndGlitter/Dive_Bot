@@ -8,6 +8,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,6 +24,7 @@ public class Intake extends SubsystemBase {
 
   /** Creates a new Intake. */
   public Intake() {
+
     frontMotor = new TalonFX(Constants.IntakeConstants.FRONT_MOTOR_ID);
     backMotor = new TalonFX(Constants.IntakeConstants.BACK_MOTOR_ID);
 
@@ -43,8 +46,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void outPut() {
-  //   frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
-  //   backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
+
   }
 
   private void stopMotors() {

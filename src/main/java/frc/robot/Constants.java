@@ -26,30 +26,31 @@ public final class Constants {
     }
 
     public static final class ArmAngleChangeConstants {
-        public static final int ArmAngleChange_Motor_ID =41;
-        public static final double INTAKE_POSITION = -15;
+        public static final int ArmAngleChange_Motor_ID =32;
+        public static final double INTAKE_POSITION = 2.5;
         public static final double L2_L3_ANGLE_POSITION = 5;
         public static final double  KP_POSITION_PID = 0.2;
         public static final double  KI_POSITION_PID = 0;
         public static final double  KD_POSITION_PID = 0;
+        // 7
         
     }
 
 
     public static final class ElevatorConstants {
-        public static final double KP_POSITION_PID = 0.2;
+        public static final double KP_POSITION_PID = 0.08;
         public static final double L2_POSITION = 12;
         public static final double L3_POSITION = 42;
         public static final double L4_POSITION = 46;
-        public static final int ELEVATOR_MOTOR1_ID = 0;
-        public static final int ELEVATOR_MOTOR2_ID = 0;
+        public static final int ELEVATOR_MOTOR1_ID = 51;
+        public static final int ELEVATOR_MOTOR2_ID = 52;
 
         
     }
     
     public static final class IntakeConstants {
-        public static final int FRONT_MOTOR_ID = 0;
-        public static final int BACK_MOTOR_ID = 0;
+        public static final int FRONT_MOTOR_ID = 61;
+        public static final int BACK_MOTOR_ID = 62;
     }
 
     public static final class AprilTagConstants {
