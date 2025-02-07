@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -166,7 +167,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getHeading(){
-        return getPose().getRotation();
+        return getGyroYaw();
     }
 
     public void setHeading(Rotation2d heading){
@@ -175,6 +176,10 @@ public class Swerve extends SubsystemBase {
 
     public void zeroHeading(){
         gyro.setYaw(0);
+    }
+
+    public Command zeroHeadingCommand(){
+        return this.run(() -> zeroHeading());
     }
 
     public Rotation2d getGyroYaw() {
@@ -205,9 +210,6 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         
-        // System.out.println(mSwerveMods[0].getCANcoder().getRotations() - Constants.Swerve.Mod0.angleOffset.getRotations());
-        // System.out.println(mSwerveMods[3].getCANcoder().getRotations() - Constants.Swerve.Mod3.angleOffset.getRotations());
-
 
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data

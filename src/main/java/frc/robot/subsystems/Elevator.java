@@ -55,6 +55,7 @@ public class Elevator extends SubsystemBase {
     }else{
       motor.set(speed);
     }
+    // motor.set(speed);
   }
 
   public double getPosition(){

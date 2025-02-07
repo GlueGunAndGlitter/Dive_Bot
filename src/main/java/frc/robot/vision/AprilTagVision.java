@@ -57,6 +57,25 @@ public class AprilTagVision {
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
     }
 
+
+    public double getY(){
+        var firstCameraResult = aprilTagsCamera.getLatestResult();
+        if (firstCameraResult.hasTargets()) {
+        var best = firstCameraResult.getBestTarget();
+        return best.getBestCameraToTarget().getY() * Math.signum(best.getYaw());
+        }
+        return 0;
+    }
+
+    public double getX(){
+        var firstCameraResult = aprilTagsCamera.getLatestResult();
+        if (firstCameraResult.hasTargets()) {
+        var best = firstCameraResult.getBestTarget();
+        return best.getBestCameraToTarget().getX();
+        }
+        return 0;
+    }
+
     public double getAprilTagDistanceFromRobotCentre(){
         var firstCameraResult = aprilTagsCamera.getLatestResult();
         var secondCameraResult = secondCamera.getLatestResult();

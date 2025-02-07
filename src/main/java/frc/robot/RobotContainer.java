@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.CondionalArmChangeCommand;
-import frc.robot.commands.OutL1Command;
-import frc.robot.commands.OutL2Command;
-import frc.robot.commands.OutL3Command;
-import frc.robot.commands.OutL4Command;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
+import frc.robot.commands.condition.CondionalArmChangeCommand;
+import frc.robot.commands.condition.OutL1Command;
+import frc.robot.commands.condition.OutL2Command;
+import frc.robot.commands.condition.OutL3Command;
+import frc.robot.commands.condition.OutL4Command;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
 import frc.robot.vision.ObjectDetection;
@@ -47,8 +47,6 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kStart.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
 
     /* Subsystems */
@@ -92,21 +90,30 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-
-        //commandXBoxController.a().whileTrue(elevator.testUp());
-        //commandXBoxController.a().whileTrue(elevator.testUp());
-        //commandXBoxController.b().whileTrue(elevator.testDown());
+        commandXBoxController.start().whileTrue(s_Swerve.zeroHeadingCommand());
        commandXBoxController.a().whileTrue(L1());
        commandXBoxController.b().whileTrue(L2());
        commandXBoxController.y().whileTrue(L3());
        commandXBoxController.x().whileTrue(L4());
-        commandXBoxController.rightBumper().whileTrue(intake());
+       commandXBoxController.rightBumper().whileTrue(coralIntake());
+
+
+       commandXBoxController.rightTrigger().whileTrue(new ReefAsisst
+       (
+        () -> driver.getRawAxis(translationAxis), 
+        () -> driver.getRawAxis(strafeAxis), 
+        () -> driver.getRawAxis(rotationAxis)));
+
+
+       commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
+       commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
+
+
     }
     public Command ElevatorTest(){
         return elevator.elevatorCommand();
     }
-    public Command intake() {
+    public Command coralIntake() {
         return armAngleChange.setIntakePositionCommand()
         .alongWith(arm.intakCommand());
     }
@@ -153,10 +160,9 @@ public class RobotContainer {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis), 
-                    () -> robotCentric.getAsBoolean()
+                    () -> driver.getRawAxis(translationAxis), 
+                    () -> driver.getRawAxis(strafeAxis), 
+                    () -> driver.getRawAxis(rotationAxis)
                 )
             );
         

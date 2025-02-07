@@ -30,6 +30,14 @@ public class IntakeAlgea extends SubsystemBase {
   public Command stopMotorsCommand(){
     return this.run(() -> intakeMotor.stopMotor());
   }
+
+  public Command intakeCommand(){
+    return this.run(() -> intakeMotor.set(0.3));
+  }
+
+  public Command OutakeCommand(){
+    return this.run(() -> intakeMotor.set(-0.3));
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

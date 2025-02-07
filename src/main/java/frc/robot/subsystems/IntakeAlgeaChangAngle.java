@@ -17,13 +17,14 @@ public class IntakeAlgeaChangAngle extends SubsystemBase {
     TalonFX intakeAlgeaChangAngleMotor; 
     PIDController positionPID;
     //TalonFX backMotor;
-
+    boolean algeaIn = false;
     
    TalonFXConfiguration intakeAlgeaChangAngleConfiguration;
    // public TalonFXConfiguration backMotorConfiguration;
 
   /** Creates a new Intake. */
   public IntakeAlgeaChangAngle() {
+    positionPID = new PIDController(0.4, 0, 0);
 
     intakeAlgeaChangAngleMotor = new TalonFX(Constants.IntakeAlgeaChangAngle.INTAKE_ALGEA_ID);
 
@@ -38,16 +39,38 @@ public class IntakeAlgeaChangAngle extends SubsystemBase {
   public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
     double PIDOutput = positionPID.calculate(motor.getPosition().getValueAsDouble(), wantedPosition);
     double speed = Math.signum(PIDOutput) * Math.min(maxSpeed, Math.abs(PIDOutput));
+    motor.set(speed);
   }
 
   private void zeroPositionAlgea(){
-      setPosition(intakeAlgeaChangAngleMotor, 0.1, 0);
+      double pos;
+      if (algeaIn) {
+        pos = 0.8;
+      }else{
+        pos = 0;
+      }
+      setPosition(intakeAlgeaChangAngleMotor, 0.1, pos);
   }
+
+  
+  private void algeaIntake(){
+    algeaIn = true;
+    setPosition(intakeAlgeaChangAngleMotor, 0.1, 3);
+}
+  private void algeaOutake(){
+    algeaIn = false;
+  }
+
 
   public Command algeaIntakeCommand(){
-    return this.run(()-> setPosition(intakeAlgeaChangAngleMotor, 0.7,5));
-
+    return this.run(()-> algeaIntake());
   }
+
+  public Command algeaOutakeCommand(){
+    return this.run(()-> algeaOutake());
+  }
+
+
 
   public Command zeroPositionAlgeaCommand(){
     return this.run(() -> zeroPositionAlgea());
@@ -61,29 +84,5 @@ public class IntakeAlgeaChangAngle extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  private void input() {
-  //   frontMotor.set(Robot.intakeFrontMotorShufflebordSpeed.getDouble(0));
-  //   backMotor.set(Robot.intakeBackMotorShufflebordSpeed.getDouble(0));
-  }
 
-  private void outPut() {
-
-  }
-
-  private void stopMotors() {
-    intakeAlgeaChangAngleMotor.set(0);
-    //backMotor.set(0);
-  }
-
-  public Command inputCommand() {
-    return this.run(() -> input());
-  }
-
-  public Command outPutCommand() {
-    return this.run(() -> outPut());
-  }
-
-  public Command stopMotorsCommand() {
-    return this.run(() -> stopMotors());
-  }
 }

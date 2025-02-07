@@ -70,7 +70,6 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(armAngleChangeMotor.getPosition().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 }

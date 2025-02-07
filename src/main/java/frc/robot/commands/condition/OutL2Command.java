@@ -3,7 +3,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.condition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -24,7 +24,7 @@ public class OutL2Command extends Command {
   @Override
   public void execute() {
     if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_L3_ANGLE_POSITION -0.5
-        && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L2_POSITION - 1) {
+        && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L2_POSITION - 0.5) {
         RobotContainer.arm.outPutL2L3();
     }
   }
@@ -36,6 +36,7 @@ public class OutL2Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !RobotContainer.arm.isCoralIn();
+    return false;
+    // !RobotContainer.arm.isCoralIn();
   }
 }

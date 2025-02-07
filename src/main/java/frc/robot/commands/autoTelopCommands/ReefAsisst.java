@@ -21,11 +21,15 @@ public class ReefAsisst extends Command {
 
   DoubleSupplier translationX;
   DoubleSupplier translationY;
-  PIDController controller;
+  PIDController orizontalPID;
+  PIDController forwordBackwordsPID;
+  PIDController rotionPID;
   DoubleSupplier rotationSup;
   /** Creates a new ReefAsisst. */
   public ReefAsisst(DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
-    controller = new PIDController(1, 0, 0);
+    orizontalPID = new PIDController(2, 0, 0);
+    forwordBackwordsPID = new PIDController(0.2, 0, 0);
+    rotionPID = new PIDController(0, 0, 0);
 
     //apply deadband 
     this.translationX = translationX;
@@ -50,11 +54,13 @@ public class ReefAsisst extends Command {
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
-  double output = controller.calculate(RobotContainer.aprilTag.getAprilTagDistanceFromRobotCentre(),0);
-    System.out.println(output);
+    double outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.getY(),-0.25);
+    double outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.getX(), 0.3);
+
+    
     if (RobotContainer.aprilTag.hasTarget()) {
       RobotContainer.s_Swerve.drive(
-        new Translation2d(translationVal, output).times(Constants.Swerve.maxSpeed), 
+        new Translation2d(outputforwordBackwords, -outputOrizontal).times(Constants.Swerve.maxSpeed), 
         rotationVal * Constants.Swerve.maxAngularVelocity, 
         true, 
         true);
