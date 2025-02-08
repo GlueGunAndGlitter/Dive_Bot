@@ -23,7 +23,7 @@ public class OutL2Command extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_L3_ANGLE_POSITION -0.5
+    if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION - 0.5
         && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L2_POSITION - 0.5) {
         RobotContainer.arm.outPutL2L3();
     }

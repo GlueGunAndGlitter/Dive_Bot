@@ -57,10 +57,15 @@ public class ArmAngleChange extends SubsystemBase {
     return this.run(() -> setPosition(armAngleChangeMotor, 0.7, Constants.ArmAngleChangeConstants.L4_POSITION));
   }
 
-  public Command setL2L3PositionCommand() {
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_L3_ANGLE_POSITION));
+  public Command setL2PositionCommand() {
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION));
   }
-
+  public Command setL3PositionCommand() {
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION));
+  }
+  public Command setLowAlgeaCommand(){
+    return this.run(()-> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.LOW_ALGEA_POSITION));
+  }
   public double getPosition(){
     return armAngleChangeMotor.getPosition().getValueAsDouble();
   }
@@ -70,6 +75,7 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(getPosition());
     // This method will be called once per scheduler run
   }
 }

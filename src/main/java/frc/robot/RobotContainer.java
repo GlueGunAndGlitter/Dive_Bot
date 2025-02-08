@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CoralIntake;
+import frc.robot.commands.IntakeCurrection;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
 import frc.robot.commands.condition.CondionalArmChangeCommand;
@@ -96,10 +98,11 @@ public class RobotContainer {
        commandXBoxController.y().whileTrue(L3());
        commandXBoxController.x().whileTrue(L4());
        commandXBoxController.rightBumper().whileTrue(coralIntake());
-
+       commandXBoxController.back().whileTrue(LowAlgea());
 
        commandXBoxController.rightTrigger().whileTrue(new ReefAsisst
        (
+        s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
         () -> driver.getRawAxis(rotationAxis)));
@@ -115,8 +118,23 @@ public class RobotContainer {
     }
     public Command coralIntake() {
         return armAngleChange.setIntakePositionCommand()
-        .alongWith(arm.intakCommand());
+        .alongWith(new CoralIntake(arm)
+        .andThen(new IntakeCurrection(arm)));
     }
+    public Command LowAlgea(){
+        return armAngleChange.setLowAlgeaCommand()
+        .alongWith(elevator.elevatorL3Command());
+        //.alongWith(arm.intakeOutPutCommand());
+     }
+     public Command highAlgea(){
+        return elevator.elevatorL3Command()
+        .alongWith(armAngleChange.setLowAlgeaCommand()
+        .alongWith(arm.intakeOutPutCommand()));
+
+        //   return elevator.elevatorL3Command()
+        //   .andThen(armAngleChange.setLowAlgeaCommand()
+        // .alongWith(arm.intakeOutPutCommand()));
+     }
     public Command L1(){
        return armAngleChange.setL1PositionCommand()
        .alongWith(new OutL1Command());
@@ -124,15 +142,21 @@ public class RobotContainer {
 
     public Command L2(){
         return elevator.elevatorL2Command()
-        .alongWith(armAngleChange.setL2L3PositionCommand())
+        .alongWith(armAngleChange.setL2PositionCommand())
         .alongWith(new OutL2Command());
     }
 
     public Command L3(){
             return elevator.elevatorL3Command()
-            .alongWith(armAngleChange.setL2L3PositionCommand())
+            .alongWith(armAngleChange.setL3PositionCommand())
             .alongWith(new OutL3Command());
           }
+          public Command L3Auto(){
+            return elevator.elevatorL3Command()
+            .alongWith(armAngleChange.setL3PositionCommand())
+            .alongWith(new WaitCommand(1).andThen(arm.normalOutCommand()));
+          }
+
     
         public Command L4(){
             return elevator.elevatorL4Command()
@@ -171,8 +195,8 @@ public class RobotContainer {
         }
     
     void registerCommand(){
-            NamedCommands.registerCommand("L3Auto", L3());
-            
+            NamedCommands.registerCommand("L3Auto", L3Auto());
+            NamedCommands.registerCommand("L4Auto", L4());
             
     }
 

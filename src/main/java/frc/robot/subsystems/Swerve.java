@@ -171,7 +171,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setHeading(Rotation2d heading){
-        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
+        gyro.setYaw(0);    
     }
 
     public void zeroHeading(){

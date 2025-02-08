@@ -35,6 +35,6 @@ public class OutL4Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !RobotContainer.arm.isCoralIn();
+    return false;
   }
 }

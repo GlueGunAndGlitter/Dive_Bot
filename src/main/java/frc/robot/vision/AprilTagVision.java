@@ -62,7 +62,7 @@ public class AprilTagVision {
         var firstCameraResult = aprilTagsCamera.getLatestResult();
         if (firstCameraResult.hasTargets()) {
         var best = firstCameraResult.getBestTarget();
-        return best.getBestCameraToTarget().getY() * Math.signum(best.getYaw());
+        return best.getBestCameraToTarget().getY();
         }
         return 0;
     }

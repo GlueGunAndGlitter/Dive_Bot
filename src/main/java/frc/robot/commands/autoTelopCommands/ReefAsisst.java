@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.Swerve;
+import frc.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ReefAsisst extends Command {
@@ -25,18 +25,23 @@ public class ReefAsisst extends Command {
   PIDController forwordBackwordsPID;
   PIDController rotionPID;
   DoubleSupplier rotationSup;
-  /** Creates a new ReefAsisst. */
-  public ReefAsisst(DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
-    orizontalPID = new PIDController(2, 0, 0);
-    forwordBackwordsPID = new PIDController(0.2, 0, 0);
-    rotionPID = new PIDController(0, 0, 0);
 
+  Swerve swerve;
+
+  /** Creates a new ReefAsisst. */
+  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
+    orizontalPID = new PIDController(1, 0, 0);
+    forwordBackwordsPID = new PIDController(0.3, 0, 0);
+    rotionPID = new PIDController(0.01, 0, 0);
+
+    this.swerve = swerve;
     //apply deadband 
     this.translationX = translationX;
     this.translationY = translationY;
     this.rotationSup = rotationSup;
     
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(this.swerve);
   }
 
 
@@ -54,19 +59,20 @@ public class ReefAsisst extends Command {
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
-    double outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.getY(),-0.25);
-    double outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.getX(), 0.3);
+    double outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.getY(),0.04);
+    double outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.getX(), 0.51);
+    double output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),0);
 
     
     if (RobotContainer.aprilTag.hasTarget()) {
-      RobotContainer.s_Swerve.drive(
-        new Translation2d(outputforwordBackwords, -outputOrizontal).times(Constants.Swerve.maxSpeed), 
-        rotationVal * Constants.Swerve.maxAngularVelocity, 
+      swerve.drive(
+        new Translation2d(outputforwordBackwords, outputOrizontal).times(Constants.Swerve.maxSpeed), 
+        -output * Constants.Swerve.maxAngularVelocity, 
         true, 
         true);
       
     } else{
-      RobotContainer.s_Swerve.drive(
+      swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
         rotationVal * Constants.Swerve.maxAngularVelocity, 
         true, 

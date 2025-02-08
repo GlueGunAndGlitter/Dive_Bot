@@ -51,22 +51,19 @@ public class Arm extends SubsystemBase {
         return !input.get();
       }
 
-      private double beamBreakeSpeedGive(){
-        if (!isCoralIn()) {
-          return Constants.ArmConstants.INTAKE_SPEED;
-        }else{
-          return 0;
-        }
-      }
+      public void output(){
+        motor.set(-0.1);
+     }
 
-
-      public Command intakCommand(){
-        return this.run(()-> motor.set(beamBreakeSpeedGive()));
-
+      public void intake(){
+         motor.set(Constants.ArmConstants.INTAKE_SPEED);
       }
 
       public Command L1Output(){
         return this.run(()-> motor.set(Constants.ArmConstants.L1_SPEEED));
+    }
+    public Command intakeOutPutCommand(){
+      return this.run(() -> motor.set(Constants.ArmConstants.INTAKE_SPEED));
     }
 
       public Command outCommand(){
@@ -84,7 +81,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     System.out.println(input.get());
-    System.out.println(RobotContainer.aprilTag.getY());
+    
     // This method will be called once per scheduler run
   }
 }

@@ -42,12 +42,17 @@ public class Elevator extends SubsystemBase {
 
   }
   
-  
+  public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
+    double PIDOutput = positionPID.calculate(motor.getPosition().getValueAsDouble(), wantedPosition);
+    double speed = Math.signum(PIDOutput) * Math.min(maxSpeed, Math.abs(PIDOutput));
+    motor.set(speed);
+  }
   
   /**
+   * the speedy version of setPosition
    * @param maxSpeed should beatwean 0-1
    */
-  public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
+  public void setPositionSpeedy(TalonFX motor, double maxSpeed, double wantedPosition){
     double PIDOutput = positionPID.calculate(motor.getPosition().getValueAsDouble(), wantedPosition);
     double speed = Math.signum(PIDOutput) * Math.min(maxSpeed, Math.abs(PIDOutput));
     if (motor.getPosition().getValueAsDouble() < wantedPosition/2 && maxSpeed != 0){
@@ -63,6 +68,10 @@ public class Elevator extends SubsystemBase {
   }
 
 
+  public void set2MotorsPositionSpeedy(double maxSpeed, double wantedPosition){
+    setPositionSpeedy(elevatorMotor1, maxSpeed, wantedPosition);
+    setPositionSpeedy(elevatorMotor2, maxSpeed, wantedPosition);
+  }
   public void set2MotorsPosition(double maxSpeed, double wantedPosition){
     setPosition(elevatorMotor1, maxSpeed, wantedPosition);
     setPosition(elevatorMotor2, maxSpeed, wantedPosition);
@@ -71,9 +80,9 @@ public class Elevator extends SubsystemBase {
 
   private void zeroPosition(){
     if (Math.abs(RobotContainer.armAngleChange.getPosition()) < 8) {
-      set2MotorsPosition(0.1, 0);
+      set2MotorsPositionSpeedy(0.1, 0);
     }else{
-      set2MotorsPosition(0, 0);
+      set2MotorsPositionSpeedy(0, 0);
 
     }
   }
@@ -88,17 +97,17 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command elevatorL3Command(){
-    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L3_POSITION));
+    return this.run(()-> set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L3_POSITION));
 
   }
   
   public Command  elevatorL4Command(){
-    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L4_POSITION));
+    return this.run(()-> set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L4_POSITION));
 
   }
 
   public Command  elevatorCommand(){
-    return this.run(()-> set2MotorsPosition(1, 14.8));
+    return this.run(()-> set2MotorsPositionSpeedy(1, 14.8));
   }
   
 
@@ -106,7 +115,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+   // System.out.println(getPosition());
     // This method will be called once per scheduler run
   }
 }
