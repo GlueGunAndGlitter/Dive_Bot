@@ -20,6 +20,7 @@ import frc.robot.commands.CoralIntake;
 import frc.robot.commands.IntakeCurrection;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
+import frc.robot.commands.autoTelopCommands.ReefAsisstAuto;
 import frc.robot.commands.condition.CondionalArmChangeCommand;
 import frc.robot.commands.condition.OutL1Command;
 import frc.robot.commands.condition.OutL2Command;
@@ -58,6 +59,7 @@ public class RobotContainer {
     public static final IntakeAlgea intake = new IntakeAlgea();
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
+    private static final LED led = new LED();
     public static final ObjectDetection objectDetection = new ObjectDetection();
     //public static final Climb climb = new Climb();
     public static final AprilTagVision aprilTag = new AprilTagVision();
@@ -98,18 +100,25 @@ public class RobotContainer {
        commandXBoxController.y().whileTrue(L3());
        commandXBoxController.x().whileTrue(L4());
        commandXBoxController.rightBumper().whileTrue(coralIntake());
-       commandXBoxController.back().whileTrue(LowAlgea());
-
+       //commandXBoxController.back().whileTrue(LowAlgea());
+       commandXBoxController.leftTrigger().whileTrue(new ReefAsisst
+       (
+        s_Swerve,
+        () -> driver.getRawAxis(translationAxis), 
+        () -> driver.getRawAxis(strafeAxis), 
+        () -> driver.getRawAxis(rotationAxis),
+        true));
        commandXBoxController.rightTrigger().whileTrue(new ReefAsisst
        (
         s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis)));
+        () -> driver.getRawAxis(rotationAxis),
+        false));
 
 
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
-       commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
+       commandXBoxController.back().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
 
 
     }
@@ -137,24 +146,24 @@ public class RobotContainer {
      }
     public Command L1(){
        return armAngleChange.setL1PositionCommand()
-       .alongWith(new OutL1Command());
+       .alongWith(new OutL1Command(arm));
     }
 
     public Command L2(){
         return elevator.elevatorL2Command()
         .alongWith(armAngleChange.setL2PositionCommand())
-        .alongWith(new OutL2Command());
+        .alongWith(new OutL2Command(arm));
     }
 
     public Command L3(){
             return elevator.elevatorL3Command()
             .alongWith(armAngleChange.setL3PositionCommand())
-            .alongWith(new OutL3Command());
+            .alongWith(new OutL3Command(arm));
           }
           public Command L3Auto(){
             return elevator.elevatorL3Command()
             .alongWith(armAngleChange.setL3PositionCommand())
-            .alongWith(new WaitCommand(1).andThen(arm.normalOutCommand()));
+            .alongWith(new WaitCommand(0.3).andThen(arm.normalOutCommand()));
           }
 
     
@@ -162,7 +171,7 @@ public class RobotContainer {
             return elevator.elevatorL4Command()
             .alongWith(new CondionalArmChangeCommand()
             .andThen(armAngleChange.setL4PositionCommand()))
-            .alongWith(new OutL4Command());
+            .alongWith(new OutL4Command(arm));
         }
         
         /**
@@ -195,8 +204,16 @@ public class RobotContainer {
         }
     
     void registerCommand(){
-            NamedCommands.registerCommand("L3Auto", L3Auto());
+            NamedCommands.registerCommand("L3Auto", L3());
             NamedCommands.registerCommand("L4Auto", L4());
+            NamedCommands.registerCommand("reefAssistAuto", new ReefAsisstAuto
+            (
+                s_Swerve,
+        () -> driver.getRawAxis(translationAxis), 
+        () -> driver.getRawAxis(strafeAxis), 
+        () -> driver.getRawAxis(rotationAxis),
+        false));  
+            
             
     }
 

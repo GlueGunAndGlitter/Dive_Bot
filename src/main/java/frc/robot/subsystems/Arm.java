@@ -80,7 +80,6 @@ public class Arm extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    System.out.println(input.get());
     
     // This method will be called once per scheduler run
   }

@@ -188,7 +188,7 @@ public class Swerve extends SubsystemBase {
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    
+        targetSpeeds.omegaRadiansPerSecond = -targetSpeeds.omegaRadiansPerSecond;
         SwerveModuleState[] targetStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(targetSpeeds, Constants.Swerve.robotToSwerve);
         setStates(targetStates);
       }
@@ -209,7 +209,6 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        
 
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
@@ -218,10 +217,10 @@ public class Swerve extends SubsystemBase {
         // Get vision pose estimate and update if available
         Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
         if (visionPoseEstimate.isPresent()) {
-            poseEstimator.addVisionMeasurement(
-                visionPoseEstimate.get(),
-                edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
-            );
+            // poseEstimator.addVisionMeasurement(
+            //     visionPoseEstimate.get(),
+            //     edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
+            // );
         }
 
         // Update SmartDashboard for debugging

@@ -58,7 +58,17 @@ public class AprilTagVision {
     }
 
 
-    public double getY(){
+    public double leftGetY(){
+        var secondCameraResult = secondCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+        var best = secondCameraResult.getBestTarget();
+        return best.getBestCameraToTarget().getY();
+        }
+        return 0;
+
+    }
+
+    public double rightGetY(){
         var firstCameraResult = aprilTagsCamera.getLatestResult();
         if (firstCameraResult.hasTargets()) {
         var best = firstCameraResult.getBestTarget();
@@ -67,7 +77,15 @@ public class AprilTagVision {
         return 0;
     }
 
-    public double getX(){
+    public double leftGetX(){
+        var secondCameraResult = secondCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+            var best = secondCameraResult.getBestTarget();
+            return best.getBestCameraToTarget().getX();
+        }
+        return 0;
+    }
+    public double rightGetX(){
         var firstCameraResult = aprilTagsCamera.getLatestResult();
         if (firstCameraResult.hasTargets()) {
         var best = firstCameraResult.getBestTarget();
@@ -76,28 +94,22 @@ public class AprilTagVision {
         return 0;
     }
 
-    public double getAprilTagDistanceFromRobotCentre(){
-        var firstCameraResult = aprilTagsCamera.getLatestResult();
-        var secondCameraResult = secondCamera.getLatestResult();
-
-            if (firstCameraResult.hasTargets()) {
-                double distenceYAxis = firstCameraResult.getTargets().get(0).getBestCameraToTarget().getY();
-
-                return Constants.AprilTagConstants.cam1Positoin.getY() - distenceYAxis;
-
-                
-            }else if (secondCameraResult.hasTargets()){
-                double distenceYAxis = secondCameraResult.getTargets().get(0).getBestCameraToTarget().getY();
-
-
-                return Constants.AprilTagConstants.cam2Positoin.getY() - distenceYAxis;
-
-            }
-            
-            else {
-                return 0;
-            }
+    public int rightGetId(){
+        var best = aprilTagsCamera.getLatestResult();
+        if (best.hasTargets()){
+            return best.getBestTarget().getFiducialId();
+        }else{ 
+            return -1;
         }
+    }
+    public int leftGetId(){
+        var best = secondCamera.getLatestResult();
+        if (best.hasTargets()){
+            return best.getBestTarget().getFiducialId();
+        }else{ 
+            return -1;
+        }
+    }
 
     public boolean hasTarget(){
         var firstCameraResult = aprilTagsCamera.getLatestResult();

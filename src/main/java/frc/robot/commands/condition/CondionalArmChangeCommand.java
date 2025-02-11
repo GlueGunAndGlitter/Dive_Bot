@@ -29,6 +29,6 @@ public class CondionalArmChangeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.elevator.getPosition() > 7;
+    return RobotContainer.elevator.getPosition() > 9;
   }
 }

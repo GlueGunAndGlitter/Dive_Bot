@@ -16,7 +16,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ReefAsisst extends Command {
+public class ReefAsisstAuto extends Command {
 
 
   DoubleSupplier translationX;
@@ -28,10 +28,9 @@ public class ReefAsisst extends Command {
   boolean isLeft;
 
   Swerve swerve;
-  double angel = 0;
 
   /** Creates a new ReefAsisst. */
-  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup,boolean isLeft) {
+  public ReefAsisstAuto(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup,boolean isLeft) {
     orizontalPID = new PIDController(1, 0, 0);
     forwordBackwordsPID = new PIDController(0.3, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
@@ -66,18 +65,15 @@ public class ReefAsisst extends Command {
     double outputforwordBackwords;
     double output;
 
-    if (getAngle() != -1) {
-      angel = getAngle();
-    }
     if (isLeft) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
       outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.32);
-      output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360), -60);
+      output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),60);
   
     }else{
-     outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
-     outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
-     output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),-60);
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
+      output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),-60);
     }
     
     if (RobotContainer.aprilTag.hasTarget()) {
@@ -89,8 +85,8 @@ public class ReefAsisst extends Command {
       
     } else{
       swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
-        rotationVal * Constants.Swerve.maxAngularVelocity, 
+        new Translation2d(0, 0).times(Constants.Swerve.maxSpeed), 
+        0 * Constants.Swerve.maxAngularVelocity, 
         true, 
         true);
     }
@@ -100,42 +96,10 @@ public class ReefAsisst extends Command {
   @Override
   public void end(boolean interrupted) {}
 
-  private double getAngle(){
-    int id = -1;
-    int leftID = RobotContainer.aprilTag.leftGetId();
-    int rightID = RobotContainer.aprilTag.rightGetId();
-    if (leftID == rightID){
-      id = leftID;
-    }else if(leftID == -1 && rightID != -1){
-      id = rightID;
-    }else if(leftID != -1 && rightID == -1){
-      id = leftID;
-    }else{
-      id = leftID;
-    }
-
-
-    if (id ==7 ||id == 18) {
-      return 0;
-    }else if (id == 8 || id == 17) {
-      return 60;
-    }else if (id == 6 || id == 19) {
-      return -60;
-    }else if (id == 11 || id == 20) {
-      return -120;
-    }else if (id == 10 || id == 21) {
-      return 180;
-    }else if (id == 9 || id == 22) {
-      return 120;  
-    }else {
-      return swerve.getHeading().getDegrees();
-    }
-
-  }
-
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(RobotContainer.aprilTag.rightGetY() - 0.04) < 0.05 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.15;
+    
   }
 }

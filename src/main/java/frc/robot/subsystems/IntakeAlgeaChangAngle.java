@@ -55,7 +55,7 @@ public class IntakeAlgeaChangAngle extends SubsystemBase {
   
   private void algeaIntake(){
     algeaIn = true;
-    setPosition(intakeAlgeaChangAngleMotor, 0.1, 3);
+    setPosition(intakeAlgeaChangAngleMotor, 0.1, 4);
 }
   private void algeaOutake(){
     algeaIn = false;

@@ -8,12 +8,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ArmAngleChange extends SubsystemBase {
   /** Creates a new ArmAngleChange. */
@@ -44,7 +46,7 @@ public class ArmAngleChange extends SubsystemBase {
 
 
   public Command zeroPositionCommad(){
-    return this.run(()-> setPosition(armAngleChangeMotor, 0.3, 0));
+    return this.run(()-> setPosition(armAngleChangeMotor, 0.7, 0));
   }
 
   public Command setIntakePositionCommand(){
@@ -75,7 +77,7 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(getPosition());
+    RobotContainer.aprilTag.hasTarget();
     // This method will be called once per scheduler run
   }
 }

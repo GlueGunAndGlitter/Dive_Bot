@@ -24,7 +24,7 @@ public class IntakeAlgea extends SubsystemBase {
     intakeConfiguration = new TalonFXConfiguration();
 
     intakeConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    intakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    intakeConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     intakeMotor.getConfigurator().apply(intakeConfiguration);
   }
