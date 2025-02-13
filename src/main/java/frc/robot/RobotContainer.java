@@ -126,20 +126,11 @@ public class RobotContainer {
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
        commandXBoxController.back().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
 
-       soolyControler.a().whileTrue(armAngleChange.setLevel1Command());
-       soolyControler.b().whileTrue(armAngleChange.setLevel2Command());
-       soolyControler.y().whileTrue(armAngleChange.setLevel3Command());
-       soolyControler.x().whileTrue(armAngleChange.setLevel4Command());
 
-       soolyControler.rightTrigger().whileTrue(armAngleChange.setRightTargetCommand());
-       soolyControler.leftTrigger().whileTrue(armAngleChange.setLeftTargetCommand());
 
 
     }
 
-    public Command ElevatorTest(){
-        return elevator.elevatorCommand();
-    }
     public Command coralIntake() {
         return armAngleChange.setIntakePositionCommand()
         .alongWith(new CoralIntake(arm)
