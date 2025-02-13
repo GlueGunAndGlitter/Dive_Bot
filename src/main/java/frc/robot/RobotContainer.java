@@ -46,6 +46,8 @@ public class RobotContainer {
     public static final CommandXboxController commandXBoxController = new CommandXboxController(0);
     public static final CommandXboxController soolyControler = new CommandXboxController(1);
     public static final XboxController xboxController = new XboxController(0);
+    public static final XboxController soolyXboxControler = new XboxController(1);
+
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;

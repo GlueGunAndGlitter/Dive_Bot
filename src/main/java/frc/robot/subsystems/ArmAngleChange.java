@@ -44,11 +44,27 @@ public class ArmAngleChange extends SubsystemBase {
 
 
 
-
+  
   public Command zeroPositionCommad(){
     return this.run(()-> setPosition(armAngleChangeMotor, 0.7, 0));
   }
 
+  public void setL1Position(){
+    setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION);
+  }
+  
+  public void setL2Position(){
+    setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION);
+  }
+  
+  public void setL3Position(){
+    setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION);
+  }
+  
+  public void setL4Position(){
+    setPosition(armAngleChangeMotor, 0.7, Constants.ArmAngleChangeConstants.L4_POSITION);
+  }
+  
   public Command setIntakePositionCommand(){
     return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.INTAKE_POSITION));
   }
@@ -68,42 +84,7 @@ public class ArmAngleChange extends SubsystemBase {
   public Command setLowAlgeaCommand(){
     return this.run(()-> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.LOW_ALGEA_POSITION));
   }
-  public void setLevel1(){
-    RobotContainer.level = 1;
-  }
-  public Command setLevel1Command(){
-    return this.run(() -> setLevel1());
-  }
-  public void setLevel2(){
-    RobotContainer.level = 2;
-  }
-  public Command setLevel2Command(){
-    return this.run(() -> setLevel2());
-  }
-  public void setLevel3(){
-    RobotContainer.level = 3;
-  }
-  public Command setLevel3Command(){
-    return this.run(() -> setLevel3());
-  }
-  public void setLevel4(){
-    RobotContainer.level = 4;
-  }
-  public Command setLevel4Command(){
-    return this.run(() -> setLevel4());
-  }
-  public void setRightTarget(){
-    RobotContainer.isLeft = false;
-  }
-  public Command setRightTargetCommand(){
-    return this.run(() -> setRightTarget());
-  }
-  public void setLeftTarget(){
-    RobotContainer.isLeft = true;
-  }
-  public Command setLeftTargetCommand(){
-    return this.run(() -> setLeftTarget());
-  }
+
 
 
 

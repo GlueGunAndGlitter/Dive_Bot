@@ -108,12 +108,15 @@ public class Elevator extends SubsystemBase {
 
   }
 
-  public Command  elevatorCommand(){
-    return this.run(()-> set2MotorsPositionSpeedy(1, 14.8));
+  public void setL2Position(){
+    set2MotorsPosition(0.3, Constants.ElevatorConstants.L2_POSITION);
   }
-  
-
-
+  public void setL3Position(){
+    set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L3_POSITION);
+  }
+  public void setL4Position(){
+    set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L4_POSITION);
+  }
 
   @Override
   public void periodic() {

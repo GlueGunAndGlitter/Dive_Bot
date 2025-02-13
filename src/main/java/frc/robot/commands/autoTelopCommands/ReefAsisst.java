@@ -28,7 +28,7 @@ public class ReefAsisst extends Command {
   PIDController forwordBackwordsPID;
   PIDController rotionPID;
   DoubleSupplier rotationSup;
-  boolean isLeft;
+  boolean isLeft = false;
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
@@ -39,7 +39,6 @@ public class ReefAsisst extends Command {
     forwordBackwordsPID = new PIDController(0.3, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
 
-    this.isLeft = isLeft;
     this.swerve = swerve;
     //apply deadband 
     this.translationX = translationX;
@@ -65,7 +64,6 @@ public class ReefAsisst extends Command {
   @Override
   public void execute() {
 
-
     double translationVal = MathUtil.applyDeadband(translationX.getAsDouble(), Constants.stickDeadband);
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
@@ -77,6 +75,13 @@ public class ReefAsisst extends Command {
       targertIDChange = true;
     }
     output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
+
+    if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
+      isLeft = true;
+    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
+      isLeft = false;
+    }
+
     if (isLeft) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
       outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.32);
