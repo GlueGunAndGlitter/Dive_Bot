@@ -21,6 +21,42 @@
           "data": {
             "name": "L3Auto"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopElevatorArm"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Dive test 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeAuto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Dive test 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reefAssist60degAuto"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3AutoUnlimeted"
+          }
         }
       ]
     }

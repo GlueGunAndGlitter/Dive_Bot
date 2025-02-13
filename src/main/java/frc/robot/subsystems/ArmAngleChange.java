@@ -68,6 +68,49 @@ public class ArmAngleChange extends SubsystemBase {
   public Command setLowAlgeaCommand(){
     return this.run(()-> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.LOW_ALGEA_POSITION));
   }
+  public void setLevel1(){
+    RobotContainer.level = 1;
+  }
+  public Command setLevel1Command(){
+    return this.run(() -> setLevel1());
+  }
+  public void setLevel2(){
+    RobotContainer.level = 2;
+  }
+  public Command setLevel2Command(){
+    return this.run(() -> setLevel2());
+  }
+  public void setLevel3(){
+    RobotContainer.level = 3;
+  }
+  public Command setLevel3Command(){
+    return this.run(() -> setLevel3());
+  }
+  public void setLevel4(){
+    RobotContainer.level = 4;
+  }
+  public Command setLevel4Command(){
+    return this.run(() -> setLevel4());
+  }
+  public void setRightTarget(){
+    RobotContainer.isLeft = false;
+  }
+  public Command setRightTargetCommand(){
+    return this.run(() -> setRightTarget());
+  }
+  public void setLeftTarget(){
+    RobotContainer.isLeft = true;
+  }
+  public Command setLeftTargetCommand(){
+    return this.run(() -> setLeftTarget());
+  }
+
+
+
+
+
+
+
   public double getPosition(){
     return armAngleChangeMotor.getPosition().getValueAsDouble();
   }
@@ -77,7 +120,7 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
-    RobotContainer.aprilTag.hasTarget();
+    System.out.println("level: " + RobotContainer.level + " isLeft: " + RobotContainer.isLeft);
     // This method will be called once per scheduler run
   }
 }

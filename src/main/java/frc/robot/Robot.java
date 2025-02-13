@@ -6,6 +6,9 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -34,12 +37,12 @@ public class Robot extends TimedRobot {
   
   public static GenericEntry intakeHigherMotorSpeed;
 
-
-  // public static GenericEntry randomPosition;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our

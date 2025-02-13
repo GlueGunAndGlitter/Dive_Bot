@@ -90,7 +90,9 @@ public class Elevator extends SubsystemBase {
     return this.run(() -> zeroPosition());
 
   }
-  
+  public Command elevatorZeroCommand(){
+    return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.ZERO_POSITION));
+  }
   public Command elevatorL2Command(){
     return this.run(()-> set2MotorsPosition(0.3, Constants.ElevatorConstants.L2_POSITION));
 

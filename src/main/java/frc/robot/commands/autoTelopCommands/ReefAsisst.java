@@ -4,7 +4,10 @@
 
 package frc.robot.commands.autoTelopCommands;
 
+import java.lang.annotation.Target;
 import java.util.function.DoubleSupplier;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MathUtil;
@@ -26,9 +29,9 @@ public class ReefAsisst extends Command {
   PIDController rotionPID;
   DoubleSupplier rotationSup;
   boolean isLeft;
-
+  double angle = 0;
   Swerve swerve;
-  double angel = 0;
+  boolean targertIDChange = false;
 
   /** Creates a new ReefAsisst. */
   public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup,boolean isLeft) {
@@ -53,11 +56,15 @@ public class ReefAsisst extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+     targertIDChange = false;
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
 
     double translationVal = MathUtil.applyDeadband(translationX.getAsDouble(), Constants.stickDeadband);
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
@@ -65,19 +72,17 @@ public class ReefAsisst extends Command {
     double outputOrizontal;
     double outputforwordBackwords;
     double output;
-
-    if (getAngle() != -1) {
-      angel = getAngle();
+    if (RobotContainer.aprilTag.hasTarget() && !targertIDChange) {
+      angle = getAngle();
+      targertIDChange = true;
     }
+    output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
     if (isLeft) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
       outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.32);
-      output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360), -60);
-  
     }else{
      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
-     output = rotionPID.calculate(Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),-60);
     }
     
     if (RobotContainer.aprilTag.hasTarget()) {
@@ -90,6 +95,7 @@ public class ReefAsisst extends Command {
     } else{
       swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
+        -
         rotationVal * Constants.Swerve.maxAngularVelocity, 
         true, 
         true);
@@ -98,7 +104,9 @@ public class ReefAsisst extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+     targertIDChange = false;
+  }
 
   private double getAngle(){
     int id = -1;

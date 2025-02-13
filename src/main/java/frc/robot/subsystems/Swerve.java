@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.vision.AprilTagVision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -213,6 +214,7 @@ public class Swerve extends SubsystemBase {
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
+        System.out.println("left: " + RobotContainer.aprilTag.leftGetId() + " right: " + RobotContainer.aprilTag.rightGetId());
 
         // Get vision pose estimate and update if available
         Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());

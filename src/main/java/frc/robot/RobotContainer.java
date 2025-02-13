@@ -8,10 +8,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,6 +44,7 @@ public class RobotContainer {
     private final Joystick driver = new Joystick(0);
 
     public static final CommandXboxController commandXBoxController = new CommandXboxController(0);
+    public static final CommandXboxController soolyControler = new CommandXboxController(1);
     public static final XboxController xboxController = new XboxController(0);
 
     /* Drive Controls */
@@ -50,7 +53,8 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-
+    public static int level = 1;
+    public static boolean isLeft = false;
 
     /* Subsystems */
     public static final Swerve s_Swerve = new Swerve();
@@ -59,7 +63,7 @@ public class RobotContainer {
     public static final IntakeAlgea intake = new IntakeAlgea();
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
-    private static final LED led = new LED();
+    public static final LEDSubsystem LED_SUBSYSTEM = new LEDSubsystem();
     public static final ObjectDetection objectDetection = new ObjectDetection();
     //public static final Climb climb = new Climb();
     public static final AprilTagVision aprilTag = new AprilTagVision();
@@ -107,7 +111,7 @@ public class RobotContainer {
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
         () -> driver.getRawAxis(rotationAxis),
-        true));
+        isLeft).andThen(chsableLevel()));
        commandXBoxController.rightTrigger().whileTrue(new ReefAsisst
        (
         s_Swerve,
@@ -120,8 +124,17 @@ public class RobotContainer {
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
        commandXBoxController.back().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
 
+       soolyControler.a().whileTrue(armAngleChange.setLevel1Command());
+       soolyControler.b().whileTrue(armAngleChange.setLevel2Command());
+       soolyControler.y().whileTrue(armAngleChange.setLevel3Command());
+       soolyControler.x().whileTrue(armAngleChange.setLevel4Command());
+
+       soolyControler.rightTrigger().whileTrue(armAngleChange.setRightTargetCommand());
+       soolyControler.leftTrigger().whileTrue(armAngleChange.setLeftTargetCommand());
+
 
     }
+
     public Command ElevatorTest(){
         return elevator.elevatorCommand();
     }
@@ -130,6 +143,7 @@ public class RobotContainer {
         .alongWith(new CoralIntake(arm)
         .andThen(new IntakeCurrection(arm)));
     }
+   
     public Command LowAlgea(){
         return armAngleChange.setLowAlgeaCommand()
         .alongWith(elevator.elevatorL3Command());
@@ -144,6 +158,21 @@ public class RobotContainer {
         //   .andThen(armAngleChange.setLowAlgeaCommand()
         // .alongWith(arm.intakeOutPutCommand()));
      }
+
+    public Command chsableLevel(){
+        switch (level) {
+            case 1:
+               return L1(); 
+            case 2:
+                return L2(); 
+            case 3:
+                return L3(); 
+            case 4:
+                return L4(); 
+            default:
+                return L3();
+        }
+    }
     public Command L1(){
        return armAngleChange.setL1PositionCommand()
        .alongWith(new OutL1Command(arm));
@@ -165,7 +194,12 @@ public class RobotContainer {
             .alongWith(armAngleChange.setL3PositionCommand())
             .alongWith(new WaitCommand(0.3).andThen(arm.normalOutCommand()));
           }
-
+    public Command ZeroPosition(){
+        return elevator.elevatorZeroCommand();
+    }
+    public Command StopElevatorArm(){
+       return arm.stopCommand().alongWith(elevator.zeroPositionCommand());
+    }
     
         public Command L4(){
             return elevator.elevatorL4Command()
@@ -204,9 +238,22 @@ public class RobotContainer {
         }
     
     void registerCommand(){
-            NamedCommands.registerCommand("L3Auto", L3());
+            NamedCommands.registerCommand("StopElevatorArm", StopElevatorArm().withTimeout(1));
+            NamedCommands.registerCommand("zeroelevatorAuto", ZeroPosition()); 
+            NamedCommands.registerCommand("L3Auto", L3().withTimeout(1));
+            NamedCommands.registerCommand("L3AutoUnlimeted", L3());
+
             NamedCommands.registerCommand("L4Auto", L4());
-            NamedCommands.registerCommand("reefAssistAuto", new ReefAsisstAuto
+            NamedCommands.registerCommand("intakeAuto", coralIntake().withTimeout(2));
+            NamedCommands.registerCommand("reefAssistAuto", new ReefAsisst
+            (
+                s_Swerve,
+        () -> driver.getRawAxis(translationAxis), 
+        () -> driver.getRawAxis(strafeAxis), 
+        () -> driver.getRawAxis(rotationAxis),
+        false));  
+            
+        NamedCommands.registerCommand("reefAssist60degAuto", new ReefAsisstAuto
             (
                 s_Swerve,
         () -> driver.getRawAxis(translationAxis), 

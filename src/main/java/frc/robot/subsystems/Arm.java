@@ -43,6 +43,9 @@ public class Arm extends SubsystemBase {
         motor.set(Constants.ArmConstants.OUT_SPEEED);
       }
 
+      public Command stopCommand(){
+        return this.run(() -> motor.set(0));
+      }
       public void outPutL1(){
         motor.set(Constants.ArmConstants.L1_SPEEED);
       }

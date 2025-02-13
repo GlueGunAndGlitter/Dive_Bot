@@ -67,6 +67,7 @@ public final class Constants {
 
         
         public static final double DOWN_SPEED = 0.3;
+        public static final double ZERO_POSITION = 0;
         
     }
     
