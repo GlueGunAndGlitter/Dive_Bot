@@ -2,36 +2,42 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDSubsystem extends SubsystemBase {
-    private final AddressableLED led;
-    private final AddressableLEDBuffer ledBuffer;
-    private static final int LED_PORT = 2
-    ; // Change this to your actual PWM port
-    private static final int LED_LENGTH = 30; // Change this to match your LED strip length
+  private static final int kPort = 1;
+  private static final int kLength = 120;
 
-    public LEDSubsystem() {
-        led = new AddressableLED(LED_PORT);
-        ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-        led.setLength(ledBuffer.getLength());
+  private final AddressableLED m_led;
+  private final AddressableLEDBuffer m_buffer;
 
-        // Set the default color to pink
-        setColor(255, 20, 147); // RGB for Pink
+  public LEDSubsystem() {
+    m_led = new AddressableLED(kPort);
+    m_buffer = new AddressableLEDBuffer(kLength);
+    m_led.setLength(kLength);
+    m_led.start();
 
-        led.setData(ledBuffer);
-        led.start();
-    }
+    // Set the default command to turn the strip off, otherwise the last colors written by
+    // the last command to run will continue to be displayed.
+    // Note: Other default patterns could be used instead!
+    setDefaultCommand(runPattern(LEDPattern.solid(Color.kBlack)).withName("Off"));
+  }
 
-    public void setColor(int r, int g, int b) {
-        for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setRGB(i, r, g, b);
-        }
-        led.setData(ledBuffer);
-    }
+  @Override
+  public void periodic() {
+    // Periodically send the latest LED color data to the LED strip for it to display
+    m_led.setData(m_buffer);
+  }
 
-    @Override
-    public void periodic() {
-        // Called once per scheduler run, can add animations here if needed
-    }
+  /**
+   * Creates a command that runs a pattern on the entire LED strip.
+   *
+   * @param pattern the LED pattern to run
+   */
+  public Command runPattern(LEDPattern pattern) {
+    return run(() -> pattern.applyTo(m_buffer));
+  }
 }
