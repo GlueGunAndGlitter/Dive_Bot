@@ -8,14 +8,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class ArmAngleChange extends SubsystemBase {
   /** Creates a new ArmAngleChange. */
@@ -32,7 +29,7 @@ public class ArmAngleChange extends SubsystemBase {
     armAngleChangeMotor = new TalonFX(Constants.ArmAngleChangeConstants.ArmAngleChange_Motor_ID);
     positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
     motorConfig = new TalonFXConfiguration();
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     armAngleChangeMotor.getConfigurator().apply(motorConfig);
   }
 
@@ -42,16 +39,31 @@ public class ArmAngleChange extends SubsystemBase {
     motor.set(speed);
   }
 
+  public void resetToAbsolute(){
+    armAngleChangeMotor.setPosition(0);
+  }
 
 
+
+  public Command resetToAbsoluteCommand(){
+    return this.run(() -> resetToAbsolute());
+  }
+
+  public void setIntakePosition(){
+    setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.INTAKE_POSITION);
+  }
   
   public Command zeroPositionCommad(){
-    return this.run(()-> setPosition(armAngleChangeMotor, 0.7, 0));
+    return this.run(()-> setPosition(armAngleChangeMotor, 0.3, 0));
   }
 
   public void setL1Position(){
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION);
   }
+  public void algi(){
+    setPosition(armAngleChangeMotor, 0.3, 10);
+  }
+
   
   public void setL2Position(){
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION);
@@ -62,7 +74,7 @@ public class ArmAngleChange extends SubsystemBase {
   }
   
   public void setL4Position(){
-    setPosition(armAngleChangeMotor, 0.7, Constants.ArmAngleChangeConstants.L4_POSITION);
+    setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION);
   }
   
   public Command setIntakePositionCommand(){
@@ -72,7 +84,7 @@ public class ArmAngleChange extends SubsystemBase {
     return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION));
   }
   public Command setL4PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.7, Constants.ArmAngleChangeConstants.L4_POSITION));
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION));
   }
 
   public Command setL2PositionCommand() {
@@ -101,7 +113,6 @@ public class ArmAngleChange extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("level: " + RobotContainer.level + " isLeft: " + RobotContainer.isLeft);
     // This method will be called once per scheduler run
   }
 }

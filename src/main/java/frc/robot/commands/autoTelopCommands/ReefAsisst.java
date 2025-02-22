@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve;
 
@@ -28,15 +29,15 @@ public class ReefAsisst extends Command {
   PIDController forwordBackwordsPID;
   PIDController rotionPID;
   DoubleSupplier rotationSup;
-  boolean isLeft = false;
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
+  boolean isFinished;
 
   /** Creates a new ReefAsisst. */
-  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup,boolean isLeft) {
+  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
     orizontalPID = new PIDController(1, 0, 0);
-    forwordBackwordsPID = new PIDController(0.3, 0, 0);
+    forwordBackwordsPID = new PIDController(0.4, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
 
     this.swerve = swerve;
@@ -63,34 +64,46 @@ public class ReefAsisst extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    //System.out.println(Robot.isLeft);
+    //System.out.println(getAngle());
     double translationVal = MathUtil.applyDeadband(translationX.getAsDouble(), Constants.stickDeadband);
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
     double outputOrizontal;
     double outputforwordBackwords;
     double output;
+
+
+    
+    
+    
     if (RobotContainer.aprilTag.hasTarget() && !targertIDChange) {
       angle = getAngle();
       targertIDChange = true;
     }
     output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
+    
 
-    if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
-      isLeft = true;
-    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
-      isLeft = false;
-    }
+    if (Robot.isLeft){
+      isFinished = Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.34) < 0.15;
+     }
+     else{
+      isFinished =  Math.abs(RobotContainer.aprilTag.rightGetY() - 0.03) < 0.03 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.1;
+     }
 
-    if (isLeft) {
+     if (Robot.level == 1) {
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.095);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.34);
+     }else if (Robot.isLeft) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.32);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.34);
     }else{
      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
     }
-    
+    if (!isFinished) {
     if (RobotContainer.aprilTag.hasTarget()) {
+      
       swerve.drive(
         new Translation2d(outputforwordBackwords, outputOrizontal).times(Constants.Swerve.maxSpeed), 
         -output * Constants.Swerve.maxAngularVelocity, 
@@ -105,6 +118,13 @@ public class ReefAsisst extends Command {
         true, 
         true);
     }
+  }else{
+    swerve.drive(
+      new Translation2d(0, 0).times(Constants.Swerve.maxSpeed), 
+      0 * Constants.Swerve.maxAngularVelocity, 
+      true, 
+      true);
+  }
   }
 
   // Called once the command ends or is interrupted.
@@ -124,8 +144,9 @@ public class ReefAsisst extends Command {
     }else if(leftID != -1 && rightID == -1){
       id = leftID;
     }else{
-      id = leftID;
+      id = rightID;
     }
+    //System.out.println(id);
 
 
     if (id ==7 ||id == 18) {
@@ -149,6 +170,13 @@ public class ReefAsisst extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+     if (Robot.isLeft){
+     return Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.34) < 0.15;
+    }
+
+    else{
+     return Math.abs(RobotContainer.aprilTag.rightGetY() - 0.03) < 0.03 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.15;
+
+    }
   }
 }

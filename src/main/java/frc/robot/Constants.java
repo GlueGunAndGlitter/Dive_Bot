@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final class ArmConstants {
         public static final int MOTOR_ID = 61;
-        public static final int BEAM_BREAKE_ID = 1;
+        public static final int BEAM_BREAKE_ID = 3;
         public static final double L1_SPEEED = 0.07;
         public static final double OUT_SPEEED = 0.5;
         public static final double INTAKE_SPEED = 0.15;
@@ -43,13 +43,13 @@ public final class Constants {
 
     public static final class ArmAngleChangeConstants {
         public static final int ArmAngleChange_Motor_ID =32;
-        public static final double INTAKE_POSITION = 2.5;
-        public static final double L1_POSITION = -9.5;
-        public static final double L2_ANGLE_POSITION = -5;
-        public static final double L3_ANGLE_POSITION = -5;
-        public static final double L4_POSITION = 54;
-        public static final double LOW_ALGEA_POSITION = -12;
-        public static final double  KP_POSITION_PID = 0.2;
+        public static final double INTAKE_POSITION = -2.5;
+        public static final double L1_POSITION = 5.953;
+        public static final double L2_ANGLE_POSITION = 3;
+        public static final double L3_ANGLE_POSITION = 3;
+        public static final double L4_POSITION = -37;
+        public static final double LOW_ALGEA_POSITION = 7.52;
+        public static final double  KP_POSITION_PID = 0.05;
         public static final double  KI_POSITION_PID = 0;
         public static final double  KD_POSITION_PID = 0;
         // 7
@@ -59,9 +59,9 @@ public final class Constants {
 
     public static final class ElevatorConstants {
         public static final double KP_POSITION_PID = 0.08;
-        public static final double L2_POSITION = 5.9;
-        public static final double L3_POSITION = 13.2;
-        public static final double L4_POSITION = 14.3;
+        public static final double L2_POSITION = 6.20;
+        public static final double L3_POSITION = 13.3;
+        public static final double L4_POSITION = 14.2;
         public static final int ELEVATOR_MOTOR1_ID = 51;
         public static final int ELEVATOR_MOTOR2_ID = 52;
 
@@ -175,7 +175,7 @@ public final class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 11;
             public static final int canCoderID = 21;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-43.06640625);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-40.4296875);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 
@@ -186,7 +186,7 @@ public final class Constants {
                 public static final int driveMotorID = 2;
                 public static final int angleMotorID = 12;
                 public static final int canCoderID = 22;
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(69.169921875);
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(70.224609375);
                 public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -196,7 +196,7 @@ public final class Constants {
                     public static final int driveMotorID = 3;
                     public static final int angleMotorID = 13;
                     public static final int canCoderID = 23;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(13.798828125);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(13.095703125);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -206,7 +206,7 @@ public final class Constants {
                     public static final int driveMotorID = 4;
                     public static final int angleMotorID = 14;
                     public static final int canCoderID = 24;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-4.5703125);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-1.93359375);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }

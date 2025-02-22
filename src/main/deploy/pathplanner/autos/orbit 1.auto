@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Dive Test 1"
+            "pathName": "middle"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "reefAssistAuto"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4Auto"
           }
         }
       ]

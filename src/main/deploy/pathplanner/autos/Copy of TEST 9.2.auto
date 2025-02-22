@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Dive Test 1"
+            "pathName": "from line to side"
           }
         },
         {
@@ -20,12 +20,6 @@
           "type": "named",
           "data": {
             "name": "L4Auto"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopElevatorArm"
           }
         }
       ]

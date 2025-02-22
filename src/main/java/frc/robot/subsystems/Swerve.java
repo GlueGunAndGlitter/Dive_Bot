@@ -168,7 +168,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getHeading(){
-        return getGyroYaw();
+        return poseEstimator.getEstimatedPosition().getRotation();
     }
 
     public void setHeading(Rotation2d heading){
@@ -210,11 +210,9 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
-        System.out.println("left: " + RobotContainer.aprilTag.leftGetId() + " right: " + RobotContainer.aprilTag.rightGetId());
 
         // Get vision pose estimate and update if available
         Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());

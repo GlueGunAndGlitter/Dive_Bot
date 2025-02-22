@@ -41,7 +41,7 @@ public class L3Command extends Command {
       if (arm.isCoralIn()) {
         isCoralChange = true;
       }
-      
+
       elevator.setL3Position();
       armAngleChange.setL3Position();
 
@@ -61,6 +61,7 @@ public class L3Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !arm.isCoralIn() && isCoralChange;
+    return false;
+    //return !arm.isCoralIn() && isCoralChange;
   }
 }

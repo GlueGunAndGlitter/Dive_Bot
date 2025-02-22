@@ -80,9 +80,9 @@ public class Elevator extends SubsystemBase {
 
   private void zeroPosition(){
     if (Math.abs(RobotContainer.armAngleChange.getPosition()) < 8) {
-      set2MotorsPositionSpeedy(0.1, 0);
+      set2MotorsPosition(0.1, 0);
     }else{
-      set2MotorsPositionSpeedy(0, 0);
+      set2MotorsPosition(0, 0);
 
     }
   }
@@ -98,6 +98,13 @@ public class Elevator extends SubsystemBase {
 
   }
 
+  public void highAlgi(){
+    set2MotorsPosition(0.4, 12);
+  }
+
+  public void lowAlgi(){
+    set2MotorsPosition(0.4, 5);
+  }
   public Command elevatorL3Command(){
     return this.run(()-> set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L3_POSITION));
 
@@ -120,7 +127,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-   // System.out.println(getPosition());
+  //  System.out.println(getPosition());
     // This method will be called once per scheduler run
   }
 }

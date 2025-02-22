@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmAngleChange;
@@ -19,7 +20,7 @@ public class ChoosableLevelCommand extends Command {
   Arm arm;
   ArmAngleChange armAngleChange;
   Elevator elevator;
-  int level = 3;
+
   boolean isCoralChange;
 
   public ChoosableLevelCommand(Arm arm, ArmAngleChange armAngleChange, Elevator elevator) {
@@ -49,17 +50,8 @@ public class ChoosableLevelCommand extends Command {
     }
 
 
-    if (RobotContainer.soolyXboxControler.getAButton()) {
-      level = 1;
-    }else if(RobotContainer.soolyXboxControler.getBButton()){
-      level = 2;
-    }else if(RobotContainer.soolyXboxControler.getYButton()){
-      level = 3;
-    }else if(RobotContainer.soolyXboxControler.getXButton()){
-      level = 4;
-    }
 
-    switch (level) {
+    switch (Robot.level) {
       case 1:
         armAngleChange.setL1Position();
 
@@ -101,9 +93,11 @@ public class ChoosableLevelCommand extends Command {
           armAngleChange.setL4Position();
         }
 
-        if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L4_POSITION - 0.5
-        && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L4_POSITION - 1) {
+        if (Math.abs(RobotContainer.armAngleChange.getPosition() -  Constants.ArmAngleChangeConstants.L4_POSITION) < 0.5
+        && Math.abs(RobotContainer.elevator.getPosition() - Constants.ElevatorConstants.L4_POSITION) < 0.5) {
         RobotContainer.arm.outPutL4();
+        }else{
+        RobotContainer.arm.outPutL4Slowwww();
         }
 
 
@@ -133,6 +127,7 @@ public class ChoosableLevelCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !arm.isCoralIn() && isCoralChange;
+    return false;
+    //return !arm.isCoralIn() && isCoralChange;
   }
 }

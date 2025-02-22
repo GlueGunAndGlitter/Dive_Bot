@@ -6,9 +6,6 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -34,7 +31,8 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   boolean isRedAlliance;
-  
+  public static int level = 3;
+  public static boolean isLeft = false;
   public static GenericEntry intakeHigherMotorSpeed;
 
   /**
@@ -110,11 +108,32 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
+    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+    System.out.println(level);
+    if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
+      isLeft = true;
+    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
+      isLeft = false;
+    }
+
+    if (RobotContainer.soolyXboxControler.getAButton()) {
+      level = 1;
+    }else if(RobotContainer.soolyXboxControler.getBButton()){
+      level = 2;
+    }else if(RobotContainer.soolyXboxControler.getYButton()){
+      level = 3;
+    }else if(RobotContainer.soolyXboxControler.getXButton()){
+      level = 4;
+    }
+
   }
 
   @Override

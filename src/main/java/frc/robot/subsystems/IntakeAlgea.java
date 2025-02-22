@@ -41,6 +41,7 @@ public class IntakeAlgea extends SubsystemBase {
     return this.run(() -> intakeMotor.set(-0.3));
   }
   @Override
+
   public void periodic() {
     // This method will be called once per scheduler run
   }

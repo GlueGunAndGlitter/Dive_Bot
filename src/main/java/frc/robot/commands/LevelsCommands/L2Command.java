@@ -60,6 +60,7 @@ public class L2Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !arm.isCoralIn() && isCoralChange;
+    return false;
+    //return !arm.isCoralIn() && isCoralChange;
   }
 }
