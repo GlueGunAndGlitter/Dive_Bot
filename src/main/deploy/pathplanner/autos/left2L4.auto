@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "from line to side"
+            "pathName": "LeftSide"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RightReefAssistAuto"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4Auto"
           }
         },
         {
@@ -15,15 +27,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "reefAssistAuto"
+                  "pathName": "to fesder left"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL3Auto"
+                  "name": "ZeroRobotAuto"
                 }
               }
             ]
@@ -32,25 +44,19 @@
         {
           "type": "named",
           "data": {
-            "name": "OutCoralAuto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Dive test 2"
+            "name": "intakeAutonew"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeAuto"
+            "name": "LeftReefAssistAuto"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Dive test 3"
+            "name": "L4Auto"
           }
         }
       ]

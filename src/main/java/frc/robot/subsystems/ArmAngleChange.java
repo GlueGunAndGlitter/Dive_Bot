@@ -53,8 +53,11 @@ public class ArmAngleChange extends SubsystemBase {
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.INTAKE_POSITION);
   }
   
+  public void zeroPosition(){
+    setPosition(armAngleChangeMotor, 0.7, 0);
+  }
   public Command zeroPositionCommad(){
-    return this.run(()-> setPosition(armAngleChangeMotor, 0.3, 0));
+    return this.run(()-> zeroPosition());
   }
 
   public void setL1Position(){

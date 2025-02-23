@@ -43,8 +43,8 @@ public final class Constants {
 
     public static final class ArmAngleChangeConstants {
         public static final int ArmAngleChange_Motor_ID =32;
-        public static final double INTAKE_POSITION = -2.5;
-        public static final double L1_POSITION = 5.953;
+        public static final double INTAKE_POSITION = -3.7;
+        public static final double L1_POSITION = 7.2;
         public static final double L2_ANGLE_POSITION = 3;
         public static final double L3_ANGLE_POSITION = 3;
         public static final double L4_POSITION = -37;
@@ -53,15 +53,17 @@ public final class Constants {
         public static final double  KI_POSITION_PID = 0;
         public static final double  KD_POSITION_PID = 0;
         // 7
+        public static final double CAN_OPEN_ARM = 9
+        ;
         
     }
 
 
     public static final class ElevatorConstants {
         public static final double KP_POSITION_PID = 0.08;
-        public static final double L2_POSITION = 6.20;
-        public static final double L3_POSITION = 13.3;
-        public static final double L4_POSITION = 14.2;
+        public static final double L2_POSITION = 5.7;
+        public static final double L3_POSITION = 12.5;
+        public static final double L4_POSITION = 13.6;
         public static final int ELEVATOR_MOTOR1_ID = 51;
         public static final int ELEVATOR_MOTOR2_ID = 52;
 

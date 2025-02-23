@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.TeleopCommand;
 
 import java.nio.file.WatchEvent;
 
@@ -12,12 +12,12 @@ import frc.robot.subsystems.ArmAngleChange;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class GetOutAlgeLow extends Command {
+public class GetOutAlgeHigh extends Command {
   /** Creates a new S. */
   Elevator elevator;
   Arm arm;
   ArmAngleChange angleChange;
-  public GetOutAlgeLow(Elevator elevator, Arm arm, ArmAngleChange armAngleChange) {
+  public GetOutAlgeHigh(Elevator elevator, Arm arm, ArmAngleChange armAngleChange) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.angleChange = armAngleChange;
     this.arm = arm;
@@ -34,7 +34,7 @@ public class GetOutAlgeLow extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.lowAlgi();
+    elevator.highAlgi();
     angleChange.algi();
     arm.outputAlgi();
   }

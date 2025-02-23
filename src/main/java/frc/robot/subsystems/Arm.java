@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +22,16 @@ public class Arm extends SubsystemBase {
     double max;
     TalonFX motor = new TalonFX(Constants.ArmConstants.MOTOR_ID);
     DigitalInput input = new DigitalInput(4);
+    PIDController positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
+
+
+    
+    public void setPosition(TalonFX motor, double maxSpeed, double wantedPosition){
+      double PIDOutput = positionPID.calculate(motor.getPosition().getValueAsDouble(), wantedPosition);
+      double speed = Math.signum(PIDOutput) * Math.min(maxSpeed, Math.abs(PIDOutput));
+      motor.set(speed);
+    }
+
       public Arm() {
         motorConfig =new TalonFXConfiguration();
         motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -99,7 +111,7 @@ public class Arm extends SubsystemBase {
 
     
       public Command StopShootCommand(){
-        return this.run(()-> stopShoot());
+        return this.run(()-> setPosition(motor, 0.8, motor.getPosition().getValueAsDouble()));
   }
   @Override
   public void periodic() {

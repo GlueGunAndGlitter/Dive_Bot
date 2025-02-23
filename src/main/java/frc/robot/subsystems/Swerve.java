@@ -189,6 +189,8 @@ public class Swerve extends SubsystemBase {
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+        targetSpeeds.vxMetersPerSecond = -targetSpeeds.vxMetersPerSecond;
+        targetSpeeds.vyMetersPerSecond = -targetSpeeds.vyMetersPerSecond;
         targetSpeeds.omegaRadiansPerSecond = -targetSpeeds.omegaRadiansPerSecond;
         SwerveModuleState[] targetStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(targetSpeeds, Constants.Swerve.robotToSwerve);
         setStates(targetStates);

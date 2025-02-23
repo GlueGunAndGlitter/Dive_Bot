@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.TeleopCommand;
 
 import java.util.logging.Level;
 
@@ -89,7 +89,7 @@ public class ChoosableLevelCommand extends Command {
       case 4:
         elevator.setL4Position();
 
-        if (RobotContainer.elevator.getPosition() > 9) {
+        if (RobotContainer.elevator.getPosition() > Constants.ArmAngleChangeConstants.CAN_OPEN_ARM) {
           armAngleChange.setL4Position();
         }
 
