@@ -22,6 +22,8 @@ public class Arm extends SubsystemBase {
     double max;
     TalonFX motor = new TalonFX(Constants.ArmConstants.MOTOR_ID);
     DigitalInput input = new DigitalInput(4);
+    //DigitalInput beamBrake = new DigitalInput(4);
+
     PIDController positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
 
 

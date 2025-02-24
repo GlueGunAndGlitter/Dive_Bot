@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
 
   boolean isRedAlliance;
   public static int level = 3;
-  public static boolean isLeft = false;
+  public static boolean isRight = true;
   public static GenericEntry intakeHigherMotorSpeed;
 
   /**
@@ -119,9 +119,9 @@ public class Robot extends TimedRobot {
 
     System.out.println(level);
     if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
-      isLeft = true;
+      isRight = true;
     }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
-      isLeft = false;
+      isRight = false;
     }
 
     if (RobotContainer.soolyXboxControler.getAButton()) {

@@ -57,22 +57,18 @@ public class AprilTagVision {
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
     }
 
-    public double pitagoras(double x, double y){
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    }
+
     public double leftGetY(){
         int index = 0;
         var latestResult = secondCamera.getLatestResult();
         if (latestResult.hasTargets()) {
             for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+                if((Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
+                    (Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
         var best = latestResult.getTargets().get(index);
         return best.getBestCameraToTarget().getY();
@@ -83,19 +79,17 @@ public class AprilTagVision {
 
     public double rightGetY(){
         int index = 0;
-        var latestResult = aprilTagsCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+        var letest = aprilTagsCamera.getLatestResult();
+        if (letest.hasTargets()) {
+            for (int i = 1; i<letest.getTargets().size(); i++){
+                if((Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
+                    (Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
-        var best = latestResult.getTargets().get(index);
+        var best = letest.getTargets().get(index);
         return best.getBestCameraToTarget().getY();
         }
         return 0;
@@ -103,38 +97,34 @@ public class AprilTagVision {
 
     public double leftGetX(){
         int index = 0;
-        var latestResult = secondCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+        var secondCameraResult = secondCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+            for (int i = 1; i< secondCameraResult.getTargets().size(); i++){
+                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
+                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
-        var best = latestResult.getTargets().get(index);
+        var best = secondCameraResult.getTargets().get(index);
         return best.getBestCameraToTarget().getX();
         }
         return 0;
     }
     public double rightGetX(){
         int index = 0;
-        var latestResult = aprilTagsCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+        var secondCameraResult = aprilTagsCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+            for (int i = 1; i<secondCameraResult.getTargets().size(); i++){
+                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
+                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
-        var best = latestResult.getTargets().get(index);
+        var best = secondCameraResult.getTargets().get(index);
         return best.getBestCameraToTarget().getX();
         }
         return 0;
@@ -142,38 +132,34 @@ public class AprilTagVision {
 
     public int rightGetId(){
         int index = 0;
-        var latestResult = aprilTagsCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+        var secondCameraResult = aprilTagsCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+            for (int i = 1; i< secondCameraResult.getTargets().size(); i++){
+                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
+                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
-        var best = latestResult.getTargets().get(index);
+        var best = secondCameraResult.getTargets().get(index);
         return best.getFiducialId();
         }
         return 0;
     }
     public int leftGetId(){
         int index = 0;
-        var latestResult = secondCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                double y_index = latestResult.getTargets().get(index).getBestCameraToTarget().getY();
-                double x_index = latestResult.getTargets().get(index).getBestCameraToTarget().getX();
-                double y_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getY();
-                double x_cerent = latestResult.getTargets().get(i).getBestCameraToTarget().getX();
-                
-                if(pitagoras(y_cerent,x_cerent) < pitagoras(y_index, x_index)){
+        var secondCameraResult = secondCamera.getLatestResult();
+        if (secondCameraResult.hasTargets()) {
+            for (int i = 1; i<secondCameraResult.getTargets().size(); i++){
+                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
+                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
                     index = i;
-                }
+                   }
             }
-        var best = latestResult.getTargets().get(index);
+        var best = secondCameraResult.getTargets().get(index);
         return best.getFiducialId();
         }
         return 0;

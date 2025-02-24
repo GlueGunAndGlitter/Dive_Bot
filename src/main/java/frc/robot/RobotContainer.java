@@ -25,7 +25,6 @@ import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
-import frc.robot.vision.ObjectDetection;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,7 +60,6 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final LEDSubsystem LED_SUBSYSTEM = new LEDSubsystem();
-    public static final ObjectDetection objectDetection = new ObjectDetection();
     //public static final Climb climb = new Climb();
     public static final AprilTagVision aprilTag = new AprilTagVision();
 

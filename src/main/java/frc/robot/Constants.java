@@ -43,7 +43,7 @@ public final class Constants {
 
     public static final class ArmAngleChangeConstants {
         public static final int ArmAngleChange_Motor_ID =32;
-        public static final double INTAKE_POSITION = -3.7;
+        public static final double INTAKE_POSITION = -2.8;
         public static final double L1_POSITION = 7.2;
         public static final double L2_ANGLE_POSITION = 3;
         public static final double L3_ANGLE_POSITION = 3;
