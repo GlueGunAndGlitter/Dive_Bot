@@ -75,6 +75,10 @@ public class ArmAngleChange extends SubsystemBase {
   public void setL3Position(){
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION);
   }
+
+  public void setArmToRestOnMashpeh(){
+    setPosition(armAngleChangeMotor, 0.5, -23);
+  }
   
   public void setL4Position(){
     setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION);

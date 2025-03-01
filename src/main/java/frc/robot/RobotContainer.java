@@ -20,6 +20,7 @@ import frc.robot.commands.TeleopCommand.LevelsCommands.L1Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L2Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L3Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L4Command;
+import frc.robot.commands.autoTelopCommands.ArmRestOnMashpeh;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
 import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
@@ -60,7 +61,7 @@ public class RobotContainer {
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final LEDSubsystem LED_SUBSYSTEM = new LEDSubsystem();
-    //public static final Climb climb = new Climb();
+    public static final Climb climb = new Climb();
     public static final AprilTagVision aprilTag = new AprilTagVision();
 
 
@@ -104,35 +105,36 @@ public class RobotContainer {
         s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis)).andThen(new ChoosableLevelCommand(arm, armAngleChange, elevator)));
+        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new ChoosableLevelCommand(arm, armAngleChange, elevator)));
 
 
-       commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
-       commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
+    //    commandXBoxController.leftBumper().toggleOnTrue(new ArmRestOnMashpeh(armAngleChange, elevator));
+        commandXBoxController.leftBumper().whileTrue(intake.intakeCommand().alongWith(intakeAlgeaChangAngle.algeaIntakeCommand()));
+       commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));                                 
+
        commandXBoxController.a().whileTrue(new L1Command(armAngleChange, arm));
        commandXBoxController.back().whileTrue(new ChoosableLevelCommand(arm, armAngleChange, elevator));
        //commandXBoxController.b().whileTrue(new L3Command(armAngleChange, arm, elevator));
-        
         commandXBoxController.b().whileTrue(new ReefAsisst
        (
         s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis)).andThen(new L2Command(armAngleChange, arm, elevator)));
+        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L2Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.y().whileTrue(new ReefAsisst
        (
         s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis)).andThen(new L3Command(armAngleChange, arm, elevator)));
+        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L3Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.x().whileTrue(new ReefAsisst
        (
         s_Swerve,
         () -> driver.getRawAxis(translationAxis), 
         () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis)).andThen(new L4Command(armAngleChange, arm, elevator)));
+        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L4Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.b().whileTrue(new GetOutAlgeLow(elevator, arm, armAngleChange));
         commandXBoxController.y().whileTrue(new GetOutAlgeHigh(elevator, arm, armAngleChange));

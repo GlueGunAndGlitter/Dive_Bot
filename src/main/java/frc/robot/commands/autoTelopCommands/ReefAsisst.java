@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.ArmAngleChange;
 import frc.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -28,9 +29,10 @@ public class ReefAsisst extends Command {
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
+  ArmAngleChange armAngleChange;
 
   /** Creates a new ReefAsisst. */
-  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup) {
+  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup, ArmAngleChange armAngleChange) {
     orizontalPID = new PIDController(1, 0, 0);
     forwordBackwordsPID = new PIDController(0.4, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
@@ -39,9 +41,11 @@ public class ReefAsisst extends Command {
     this.translationX = translationX;
     this.translationY = translationY;
     this.rotationSup = rotationSup;
+    this.armAngleChange = armAngleChange;
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.swerve);
+    addRequirements(this.armAngleChange);
   }
 
 
@@ -60,6 +64,7 @@ public class ReefAsisst extends Command {
   public void execute() {
     //System.out.println(Robot.isRight);
     //System.out.println(getAngle());
+    armAngleChange.zeroPosition();
     double translationVal = MathUtil.applyDeadband(translationX.getAsDouble(), Constants.stickDeadband);
     double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
     double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);

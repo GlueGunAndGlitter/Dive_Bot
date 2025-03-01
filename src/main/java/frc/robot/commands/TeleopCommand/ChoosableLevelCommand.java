@@ -23,7 +23,7 @@ public class ChoosableLevelCommand extends Command {
 
   boolean isCoralChange;
 
-  public ChoosableLevelCommand(Arm arm, ArmAngleChange armAngleChange, Elevator elevator) {
+  public  ChoosableLevelCommand(Arm arm, ArmAngleChange armAngleChange, Elevator elevator) {
     this.arm = arm;
     this.armAngleChange = armAngleChange;
     this.elevator = elevator;
@@ -122,6 +122,7 @@ public class ChoosableLevelCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    arm.zeroMotor();
   }
 
   // Returns true when the command should end.

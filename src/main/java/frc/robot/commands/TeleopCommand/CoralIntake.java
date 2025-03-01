@@ -13,6 +13,7 @@ public class CoralIntake extends Command {
 
   Arm arm;
   ArmAngleChange armAngleChange;
+  boolean isCoralChange = false;
   /** Creates a new CoralIntake. */
   public CoralIntake(Arm arm, ArmAngleChange armAngleChange) {
     this.arm = arm;
@@ -24,15 +25,20 @@ public class CoralIntake extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    isCoralChange = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
     armAngleChange.setIntakePosition();
-    if (!arm.isCoralIn()) {
+    if (!arm.isCoralIn() && !isCoralChange) {
         arm.intake();
+    }else if(arm.isCoralIn()){
+      isCoralChange = true;
+      arm.output();
     }
     else{
       arm.stopArm();
@@ -41,11 +47,14 @@ public class CoralIntake extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    arm.zeroMotor();
+    isCoralChange = false;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return arm.isCoralIn();
+    return !arm.isCoralIn() && isCoralChange;
   }
 }

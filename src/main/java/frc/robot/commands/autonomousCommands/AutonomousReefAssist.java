@@ -9,10 +9,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.ArmAngleChange;
 import frc.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -28,8 +31,8 @@ public class AutonomousReefAssist extends Command {
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
-  boolean isFinished;
   boolean isLeft;
+
 
   /** Creates a new ReefAsisst. */
   public AutonomousReefAssist(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup, boolean isLeft) {
@@ -38,11 +41,11 @@ public class AutonomousReefAssist extends Command {
     rotionPID = new PIDController(0.02, 0, 0);
 
     this.swerve = swerve;
-    //apply deadband 
     this.translationX = translationX;
     this.translationY = translationY;
     this.rotationSup = rotationSup;
     this.isLeft = isLeft;
+    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.swerve);
   }
@@ -77,28 +80,23 @@ public class AutonomousReefAssist extends Command {
     if (RobotContainer.aprilTag.hasTarget() && !targertIDChange) {
       angle = getAngle();
       targertIDChange = true;
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        angle = Math.IEEEremainder(angle + 180, 360);
+      }
     }
     output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
     
-
-    if (isLeft){
-      isFinished = Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.34) < 0.15;
-     }
-     else{
-      isFinished =  Math.abs(RobotContainer.aprilTag.rightGetY() - 0.03) < 0.03 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.1;
-     }
 
      if (Robot.level == 1) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.095);
       outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.34);
      }else if (isLeft) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.34);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.29);
     }else{
      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
     }
-    if (!isFinished) {
     if (RobotContainer.aprilTag.hasTarget()) {
       
       swerve.drive(
@@ -109,19 +107,11 @@ public class AutonomousReefAssist extends Command {
       
     } else{
       swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
-        -
-        rotationVal * Constants.Swerve.maxAngularVelocity, 
+        new Translation2d(0, 0).times(Constants.Swerve.maxSpeed), 
+        0 * Constants.Swerve.maxAngularVelocity, 
         true, 
         true);
     }
-  }else{
-    swerve.drive(
-      new Translation2d(0, 0).times(Constants.Swerve.maxSpeed), 
-      0 * Constants.Swerve.maxAngularVelocity, 
-      true, 
-      true);
-  }
   }
 
   // Called once the command ends or is interrupted.
@@ -168,7 +158,7 @@ public class AutonomousReefAssist extends Command {
   @Override
   public boolean isFinished() {
      if (isLeft){
-     return Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.34) < 0.15;
+     return Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.29) < 0.15;
     }
 
     else{

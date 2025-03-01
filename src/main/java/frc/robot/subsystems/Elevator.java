@@ -102,6 +102,10 @@ public class Elevator extends SubsystemBase {
     set2MotorsPosition(0.4, 8);
   }
 
+  public void setHightForArmRestOnMashpeh(){
+    set2MotorsPosition(0.4, 10);
+  }
+
   public void lowAlgi(){
     set2MotorsPosition(0.4, 2);
   }

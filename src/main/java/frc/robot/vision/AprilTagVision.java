@@ -1,11 +1,15 @@
+
 package frc.robot.vision;
 
 import java.util.Optional;
+import java.util.PrimitiveIterator;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -58,6 +62,95 @@ public class AprilTagVision {
     }
 
 
+    
+// -----------------------------------------------------------------------------------------------------------
+// private PhotonTrackedTarget getDataFromId(int ID, PhotonPipelineResult result){
+//     if (result.hasTargets()) {
+//         int index = 0;
+//         for (int i = 0; i < result.getTargets().size(); i++) {
+//             if (result.targets.get(i).getFiducialId() == ID) {
+//                 index = i;
+//                 break;
+//             }else{
+//                 r
+//             }
+//         }
+//     }
+// }
+
+// public double AutoleftGetY(int Id){
+//     int index = 0;
+//     var latestResult = secondCamera.getLatestResult();
+//     if (latestResult.hasTargets()) {
+//         for (int i = 1; i<latestResult.getTargets().size(); i++){
+//             if((Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
+//                 (Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
+//                 index = i;
+//                }
+//         }
+//     var best = latestResult.getTargets().get(index);
+//     return best.getBestCameraToTarget().getY();
+//     }
+//     return 0;
+
+// }
+
+// public double AutorightGetY(int Id){
+//     int index = 0;
+//     var letest = aprilTagsCamera.getLatestResult();
+//     if (letest.hasTargets()) {
+//         for (int i = 1; i<letest.getTargets().size(); i++){
+//             if((Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
+//                 (Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
+//                 index = i;
+//                }
+//         }
+//     var best = letest.getTargets().get(index);
+//     return best.getBestCameraToTarget().getY();
+//     }
+//     return 0;
+// }
+
+// public double AutoleftGetX(int Id){
+//     int index = 0;
+//     var secondCameraResult = secondCamera.getLatestResult();
+//     if (secondCameraResult.hasTargets()) {
+//         for (int i = 1; i< secondCameraResult.getTargets().size(); i++){
+//             if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
+//                 (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
+//                 index = i;
+//                }
+//         }
+//     var best = secondCameraResult.getTargets().get(index);
+//     return best.getBestCameraToTarget().getX();
+//     }
+//     return 0;
+// }
+// public double AutorightGetX(int Id){
+//     int index = 0;
+//     var secondCameraResult = aprilTagsCamera.getLatestResult();
+//     if (secondCameraResult.hasTargets()) {
+//         for (int i = 1; i<secondCameraResult.getTargets().size(); i++){
+//             if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
+//                 (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
+//                 Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
+//                 index = i;
+//                }
+//         }
+//     var best = secondCameraResult.getTargets().get(index);
+//     return best.getBestCameraToTarget().getX();
+//     }
+//     return 0;
+// }
+
+// -------------------------------------------------------------------------------------------------------------
     public double leftGetY(){
         int index = 0;
         var latestResult = secondCamera.getLatestResult();

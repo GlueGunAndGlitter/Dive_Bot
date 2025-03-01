@@ -22,7 +22,7 @@ public class Arm extends SubsystemBase {
     double max;
     TalonFX motor = new TalonFX(Constants.ArmConstants.MOTOR_ID);
     DigitalInput input = new DigitalInput(4);
-    //DigitalInput beamBrake = new DigitalInput(4);
+    DigitalInput beamBrake = new DigitalInput(7);
 
     PIDController positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
 
@@ -42,13 +42,20 @@ public class Arm extends SubsystemBase {
       }
 
       public void stopShoot(){
-            motor.stopMotor();
+          setPosition(motor, 0.7, 0);
+      }
+
+      public boolean isBeamBrakeSeeCoral(){
+        return !beamBrake.get();
       }
 
 
       public void outPutL4(){
         motor.set(-Constants.ArmConstants.OUT_SPEEED);
       }
+
+
+
       public void outPutL4Slowwww(){
         motor.set(-0.03);
       }
@@ -79,6 +86,10 @@ public class Arm extends SubsystemBase {
      public void outputAlgi(){
       motor.set(0.7);
    }
+
+    public void zeroMotor(){
+      motor.setPosition(0);
+    }
      
      public void stopArm(){
       motor.stopMotor();
@@ -113,7 +124,7 @@ public class Arm extends SubsystemBase {
 
     
       public Command StopShootCommand(){
-        return this.run(()-> setPosition(motor, 0.8, motor.getPosition().getValueAsDouble()));
+        return this.run(()-> setPosition(motor, 0.8, 0));
   }
   @Override
   public void periodic() {
