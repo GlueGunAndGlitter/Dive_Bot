@@ -91,8 +91,8 @@ public final class Constants {
 
 
     public static final class Swerve {
-        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
-        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.2, 0.2, 0.1);    // Odometry trust factors
+        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.7, 0.7, 0.1);   // Vision trust factors
+        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.7, 0.7, 0.7);    // Odometry trust factors
         
                 
         public static final int pigeonID = 7;
@@ -224,7 +224,12 @@ public final class Constants {
     }
 
 
-    public static final class ReefAsisstConstnt {
+    public static final class ReefAssistConstants {
+
+        public static final PIDConstants ROTATION_PID_VALUES = new PIDConstants(0.0055, 0.0, 0.00055);
+        public static final PIDConstants Y_PID_CONSTANTS = new PIDConstants(1, 0.0, 0.1);
+        public static final PIDConstants X_PID_CONSTANTS = new PIDConstants(1, 0.0, 0.1);
+
 
         static final Pose2d ID_6_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
         static final Pose2d ID_6_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
@@ -265,6 +270,9 @@ public final class Constants {
 
         public static final Map<Integer, Pose2d> LEFT_TARGETS = new HashMap<>();
         public static final Map<Integer, Pose2d> RIGHT_TARGETS = new HashMap<>();
+        public static final double X_TOLERANCE = 0;
+        public static final double Y_TOLERANCE = 0;
+        public static final double ROTATION_TOLERANCE = 0;
 
         static {
             // Populate LEFT_TARGETS

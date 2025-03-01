@@ -217,13 +217,13 @@ public class Swerve extends SubsystemBase {
         poseEstimator.update(getGyroYaw(), getModulePositions());
 
         // Get vision pose estimate and update if available
-        // Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
-        // if (visionPoseEstimate.isPresent()) {
-            // poseEstimator.addVisionMeasurement(
-            //     visionPoseEstimate.get(),
-            //     edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
-            // );
-        // }
+        Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
+        if (visionPoseEstimate.isPresent()) {
+            poseEstimator.addVisionMeasurement(
+                visionPoseEstimate.get(),
+                edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
+            );
+        }
 
         // Update SmartDashboard for debugging
         SmartDashboard.putString("Robot Pose", getPose().toString());
