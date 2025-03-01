@@ -13,13 +13,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.Constants;
 
 public class AprilTagVision {
 
     // Cameras for AprilTag detection
-    private final PhotonCamera aprilTagsCamera;
-    private final PhotonCamera secondCamera;
+    private final PhotonCamera DownLeftCamera;
+    private final PhotonCamera DownRightCamera;
+    private final PhotonCamera upCamera;   // Third Camera
 
     // Field layout with AprilTag locations
     private final AprilTagFieldLayout aprilTagFieldLayout;
@@ -27,182 +27,102 @@ public class AprilTagVision {
     // Camera-to-robot transforms
     private final Transform3d robotToCam1;
     private final Transform3d robotToCam2;
+    private final Transform3d robotToCam3;  // Third Camera Transform
 
     // PhotonVision Pose Estimators for each camera
     private final PhotonPoseEstimator poseEstimator1;
     private final PhotonPoseEstimator poseEstimator2;
+    private final PhotonPoseEstimator poseEstimator3; // Third Camera Estimator
 
     public AprilTagVision() {
         // Initialize cameras
-        aprilTagsCamera = new PhotonCamera("AprilTags_Camera_1");
-        secondCamera = new PhotonCamera("Second-Camera");
+        DownLeftCamera = new PhotonCamera("DownLeftCamera");
+        DownRightCamera = new PhotonCamera("DownRightCamera");
+        upCamera = new PhotonCamera("upCamera"); // Initialize Third Camera
 
-        // Load the field layout for AprilTag positions (e.g., for the 2024 game field)
+        // Load the field layout for AprilTag positions
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
-            Constants.AprilTagConstants.cam1Positoin,
-            new Rotation3d(Math.toRadians(180), Math.toRadians(24), 0)
-        );
-        robotToCam2 = new Transform3d(
-            Constants.AprilTagConstants.cam2Positoin,
+            new Translation3d(0, 0, 0),
             new Rotation3d(0, 0, 0)
         );
-
-
+        robotToCam2 = new Transform3d(
+            new Translation3d(0, 0, 0),
+            new Rotation3d(0, 0, 0)
+        );
+        robotToCam3 = new Transform3d(   // Third Camera Transform
+            new Translation3d(0, 0, 0),
+            new Rotation3d(0, 0, 0)
+        );
 
         // Initialize pose estimators with strategy and camera-to-robot transforms
         poseEstimator1 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam1);
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
+        poseEstimator3 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam3);
     }
 
+    // Method to get the estimated pose, combining all camera inputs if available
+   // Method to get the estimated pose, combining all camera inputs if available
+public Optional<Pose2d> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
 
-    public double leftGetY(){
-        int index = 0;
-        var latestResult = secondCamera.getLatestResult();
-        if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                if((Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = latestResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getY();
-        }
-        return 0;
+    PhotonPipelineResult camera1Result = DownLeftCamera.getLatestResult();
+    PhotonPipelineResult camera2Result = DownRightCamera.getLatestResult();
+    PhotonPipelineResult camera3Result = upCamera.getLatestResult(); // Third Camera Result
 
+    // Set reference pose for all estimators
+    poseEstimator1.setReferencePose(prevEstimatedRobotPose);
+    poseEstimator2.setReferencePose(prevEstimatedRobotPose);
+    poseEstimator3.setReferencePose(prevEstimatedRobotPose);
+
+    // Get the pose estimates from all cameras
+    Optional<EstimatedRobotPose> pose1 = poseEstimator1.update(camera1Result);
+    Optional<EstimatedRobotPose> pose2 = poseEstimator2.update(camera2Result);
+    Optional<EstimatedRobotPose> pose3 = poseEstimator3.update(camera3Result);
+
+    // Combine or choose the best pose estimate based on availability
+    if (pose1.isPresent() && pose2.isPresent() && pose3.isPresent()) {
+        // Average all three poses
+        Pose2d averagePose = new Pose2d(
+            pose1.get().estimatedPose.toPose2d().getTranslation()
+                .plus(pose2.get().estimatedPose.toPose2d().getTranslation())
+                .plus(pose3.get().estimatedPose.toPose2d().getTranslation()).div(3),
+            pose1.get().estimatedPose.toPose2d().getRotation()
+        );
+        return Optional.of(averagePose);
+    } else if (pose1.isPresent() && pose2.isPresent()) {
+        // Average pose1 and pose2
+        Pose2d averagePose = new Pose2d(
+            pose1.get().estimatedPose.toPose2d().getTranslation()
+                .plus(pose2.get().estimatedPose.toPose2d().getTranslation()).div(2),
+            pose1.get().estimatedPose.toPose2d().getRotation()
+        );
+        return Optional.of(averagePose);
+    } else if (pose1.isPresent() && pose3.isPresent()) {
+        // Average pose1 and pose3
+        Pose2d averagePose = new Pose2d(
+            pose1.get().estimatedPose.toPose2d().getTranslation()
+                .plus(pose3.get().estimatedPose.toPose2d().getTranslation()).div(2),
+            pose1.get().estimatedPose.toPose2d().getRotation()
+        );
+        return Optional.of(averagePose);
+    } else if (pose2.isPresent() && pose3.isPresent()) {
+        // Average pose2 and pose3
+        Pose2d averagePose = new Pose2d(
+            pose2.get().estimatedPose.toPose2d().getTranslation()
+                .plus(pose3.get().estimatedPose.toPose2d().getTranslation()).div(2),
+            pose2.get().estimatedPose.toPose2d().getRotation()
+        );
+        return Optional.of(averagePose);
+    } else if (pose1.isPresent()) {
+        return Optional.of(pose1.get().estimatedPose.toPose2d());
+    } else if (pose2.isPresent()) {
+        return Optional.of(pose2.get().estimatedPose.toPose2d());
+    } else if (pose3.isPresent()) {
+        return Optional.of(pose3.get().estimatedPose.toPose2d());
     }
 
-    public double rightGetY(){
-        int index = 0;
-        var letest = aprilTagsCamera.getLatestResult();
-        if (letest.hasTargets()) {
-            for (int i = 1; i<letest.getTargets().size(); i++){
-                if((Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = letest.getTargets().get(index);
-        return best.getBestCameraToTarget().getY();
-        }
-        return 0;
-    }
-
-    public double leftGetX(){
-        int index = 0;
-        var secondCameraResult = secondCamera.getLatestResult();
-        if (secondCameraResult.hasTargets()) {
-            for (int i = 1; i< secondCameraResult.getTargets().size(); i++){
-                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = secondCameraResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getX();
-        }
-        return 0;
-    }
-    public double rightGetX(){
-        int index = 0;
-        var secondCameraResult = aprilTagsCamera.getLatestResult();
-        if (secondCameraResult.hasTargets()) {
-            for (int i = 1; i<secondCameraResult.getTargets().size(); i++){
-                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = secondCameraResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getX();
-        }
-        return 0;
-    }
-
-    public int rightGetId(){
-        int index = 0;
-        var secondCameraResult = aprilTagsCamera.getLatestResult();
-        if (secondCameraResult.hasTargets()) {
-            for (int i = 1; i< secondCameraResult.getTargets().size(); i++){
-                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = secondCameraResult.getTargets().get(index);
-        return best.getFiducialId();
-        }
-        return 0;
-    }
-    public int leftGetId(){
-        int index = 0;
-        var secondCameraResult = secondCamera.getLatestResult();
-        if (secondCameraResult.hasTargets()) {
-            for (int i = 1; i<secondCameraResult.getTargets().size(); i++){
-                if((Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(secondCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = secondCameraResult.getTargets().get(index);
-        return best.getFiducialId();
-        }
-        return 0;
-    }
-
-    public boolean hasTarget(){
-        var firstCameraResult = aprilTagsCamera.getLatestResult();
-        var secondCameraResult = secondCamera.getLatestResult();
-        return firstCameraResult.hasTargets() || secondCameraResult.hasTargets();
-
-    }
-
-
-
-    // Method to get the estimated pose, combining both camera inputs if available
-    public Optional<Pose2d> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-
-        PhotonPipelineResult camera1Resolt = aprilTagsCamera.getLatestResult();
-        PhotonPipelineResult camera2Resolt = secondCamera.getLatestResult();
-
-
-        // Set reference pose for both estimators
-        poseEstimator1.setReferencePose(prevEstimatedRobotPose);
-        poseEstimator2.setReferencePose(prevEstimatedRobotPose);
-
-        // Get the pose estimates from both cameras
-        Optional<EstimatedRobotPose> pose1 = poseEstimator1.update(camera1Resolt);
-        Optional<EstimatedRobotPose> pose2 = poseEstimator2.update(camera2Resolt);
-
-        // Combine or choose the best pose estimate based on availability
-        if (pose1.isPresent() && pose2.isPresent()) {
-            // Average the two poses (or you could use a weighted average based on confidence)
-            Pose2d averagePose = new Pose2d(
-                pose1.get().estimatedPose.toPose2d().getTranslation().plus(pose2.get().estimatedPose.toPose2d().getTranslation()).div(2),
-                pose1.get().estimatedPose.toPose2d().getRotation()
-            );
-            return Optional.of(averagePose);
-        } else if (pose1.isPresent()) {
-            return Optional.of(pose1.get().estimatedPose.toPose2d());
-        } else if (pose2.isPresent()) {
-            return Optional.of(pose2.get().estimatedPose.toPose2d());
-        }
-
-        return Optional.empty();
-    }
+    return Optional.empty();
+}
 }

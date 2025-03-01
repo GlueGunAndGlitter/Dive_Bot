@@ -30,9 +30,8 @@ public class Robot extends TimedRobot {
 
   private Command autonomousCommand;
 
-  boolean isRedAlliance;
   public static int level = 3;
-  public static boolean isRight = true;
+  public static boolean isLeft = true;
   public static GenericEntry intakeHigherMotorSpeed;
 
   /**
@@ -49,14 +48,6 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     smartDashboard();
 
-
-
-
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      isRedAlliance = true;
-    }else{
-      isRedAlliance = false;
-    }
   }
 
   /**
@@ -119,9 +110,9 @@ public class Robot extends TimedRobot {
 
     System.out.println(level);
     if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
-      isRight = true;
+      isLeft = true;
     }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
-      isRight = false;
+      isLeft = false;
     }
 
     if (RobotContainer.soolyXboxControler.getAButton()) {

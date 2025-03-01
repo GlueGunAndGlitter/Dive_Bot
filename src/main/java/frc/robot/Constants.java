@@ -4,13 +4,18 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -38,6 +43,7 @@ public final class Constants {
         public static final double L1_SPEEED = 0.07;
         public static final double OUT_SPEEED = 0.5;
         public static final double INTAKE_SPEED = 0.15;
+        
     }
 
 
@@ -83,19 +89,12 @@ public final class Constants {
 
     }
 
-    public static final class AprilTagConstants {
-        public static final Translation3d cam1Positoin = new Translation3d(0,0,0);
-        public static final Translation3d cam2Positoin = new Translation3d(0,0,0);
 
-
-
-    }
     public static final class Swerve {
         public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
         public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.2, 0.2, 0.1);    // Odometry trust factors
-
-
         
+                
         public static final int pigeonID = 7;
 
         public static final COTSTalonFXSwerveConstants chosenModule = // TODO: This must be tuned to specific
@@ -224,6 +223,81 @@ public final class Constants {
         public static final PIDConstants rotationConstants = new PIDConstants(0, 0.0, 0);
     }
 
+
+    public static final class ReefAsisstConstnt {
+
+        static final Pose2d ID_6_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_6_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+
+        static final Pose2d ID_7_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_7_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+        static final Pose2d ID_8_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));        
+        static final Pose2d ID_8_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
+
+        static final Pose2d ID_9_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_9_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+
+        static final Pose2d ID_10_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_10_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+
+        static final Pose2d ID_11_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_11_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+        
+        static final Pose2d ID_17_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
+        static final Pose2d ID_17_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
+
+        static final Pose2d ID_18_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_18_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+        static final Pose2d ID_19_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_19_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+
+        static final Pose2d ID_20_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_20_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+
+        static final Pose2d ID_21_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_21_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        
+        static final Pose2d ID_22_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_22_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+
+
+        public static final Map<Integer, Pose2d> LEFT_TARGETS = new HashMap<>();
+        public static final Map<Integer, Pose2d> RIGHT_TARGETS = new HashMap<>();
+
+        static {
+            // Populate LEFT_TARGETS
+            LEFT_TARGETS.put(6, ID_6_TARGET_LEFT);
+            LEFT_TARGETS.put(7, ID_7_TARGET_LEFT);
+            LEFT_TARGETS.put(8, ID_8_TARGET_LEFT);
+            LEFT_TARGETS.put(9, ID_9_TARGET_LEFT);
+            LEFT_TARGETS.put(10, ID_10_TARGET_LEFT);
+            LEFT_TARGETS.put(11, ID_11_TARGET_LEFT);
+            LEFT_TARGETS.put(17, ID_17_TARGET_LEFT);
+            LEFT_TARGETS.put(18, ID_18_TARGET_LEFT);
+            LEFT_TARGETS.put(19, ID_19_TARGET_LEFT);
+            LEFT_TARGETS.put(20, ID_20_TARGET_LEFT);
+            LEFT_TARGETS.put(21, ID_21_TARGET_LEFT);
+            LEFT_TARGETS.put(22, ID_22_TARGET_LEFT);
+        
+            // Populate RIGHT_TARGETS
+            RIGHT_TARGETS.put(6, ID_6_TARGET_RIGHT);
+            RIGHT_TARGETS.put(7, ID_7_TARGET_RIGHT);
+            RIGHT_TARGETS.put(8, ID_8_TARGET_RIGHT);
+            RIGHT_TARGETS.put(9, ID_9_TARGET_RIGHT);
+            RIGHT_TARGETS.put(10, ID_10_TARGET_RIGHT);
+            RIGHT_TARGETS.put(11, ID_11_TARGET_RIGHT);
+            RIGHT_TARGETS.put(17, ID_17_TARGET_RIGHT);
+            RIGHT_TARGETS.put(18, ID_18_TARGET_RIGHT);
+            RIGHT_TARGETS.put(19, ID_19_TARGET_RIGHT);
+            RIGHT_TARGETS.put(20, ID_20_TARGET_RIGHT);
+            RIGHT_TARGETS.put(21, ID_21_TARGET_RIGHT);
+            RIGHT_TARGETS.put(22, ID_22_TARGET_RIGHT);
+        }
+    }
+}
+
   
 
-}
+
