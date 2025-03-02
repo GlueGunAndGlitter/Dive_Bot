@@ -108,7 +108,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println(level);
     if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
       isLeft = true;
     }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){

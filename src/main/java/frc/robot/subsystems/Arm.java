@@ -5,6 +5,8 @@
 
 package frc.robot.subsystems;
 
+import org.ejml.dense.row.misc.RrefGaussJordanRowPivot_DDRM;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -12,6 +14,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,6 +24,8 @@ public class Arm extends SubsystemBase {
     TalonFXConfiguration motorConfig;
     double max;
     TalonFX motor = new TalonFX(Constants.ArmConstants.MOTOR_ID);
+    TalonFX motorMashpeh = new TalonFX(62);
+
     DigitalInput input = new DigitalInput(4);
     //DigitalInput beamBrake = new DigitalInput(4);
 
@@ -42,6 +47,7 @@ public class Arm extends SubsystemBase {
       }
 
       public void stopShoot(){
+            motorMashpeh.stopMotor();
             motor.stopMotor();
       }
 
@@ -69,6 +75,7 @@ public class Arm extends SubsystemBase {
       }
 
       public boolean isCoralIn(){
+        // return false;
         return input.get();
       } 
 
@@ -80,12 +87,11 @@ public class Arm extends SubsystemBase {
       motor.set(0.7);
    }
      
-     public void stopArm(){
-      motor.stopMotor();
-   }
+
 
       public void intake(){
          motor.set(Constants.ArmConstants.INTAKE_SPEED);
+         motorMashpeh.set(0.4);
       }
 
       public void slowIntake(){
@@ -113,13 +119,15 @@ public class Arm extends SubsystemBase {
 
     
       public Command StopShootCommand(){
-        return this.run(()-> setPosition(motor, 0.8, motor.getPosition().getValueAsDouble()));
+        return this.run(()-> stopShoot());
   }
   @Override
   public void periodic() {
+      SmartDashboard.putBoolean("limit swich state", isCoralIn());
+      SmartDashboard.putNumber("motor crent", motor.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("motor posion",  motor.getPosition().getValueAsDouble());
+      SmartDashboard.putNumber("volt", motor.getMotorVoltage().getValueAsDouble());
     //max = Math.max(max, input.getVoltage());
-    // System.out.println(input.getVoltage());
-  System.out.println(input.get());
     // This method will be called once per scheduler run
   }
 }

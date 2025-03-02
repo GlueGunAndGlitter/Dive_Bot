@@ -35,6 +35,7 @@ public class Swerve extends SubsystemBase {
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
     private final Field2d m_field;
+
     
 
     private final AprilTagVision visionEstimator;
@@ -226,6 +227,7 @@ public class Swerve extends SubsystemBase {
         }
 
         // Update SmartDashboard for debugging
+    
         SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
