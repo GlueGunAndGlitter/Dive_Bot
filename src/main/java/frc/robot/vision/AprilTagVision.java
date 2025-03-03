@@ -38,8 +38,8 @@ public class AprilTagVision {
 
     public AprilTagVision() {
         // Initialize cameras
-        aprilTagsCamera = new PhotonCamera("AprilTags_Camera_1");
-        secondCamera = new PhotonCamera("Second-Camera");
+        aprilTagsCamera = new PhotonCamera("DownLeftCamera");
+        secondCamera = new PhotonCamera("DownRightCamera");
 
         // Load the field layout for AprilTag positions (e.g., for the 2024 game field)
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
