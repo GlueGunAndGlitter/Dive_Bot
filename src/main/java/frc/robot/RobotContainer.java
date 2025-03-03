@@ -97,7 +97,10 @@ public class RobotContainer {
         commandXBoxController.start().whileTrue(s_Swerve.zeroHeadingCommand());
        commandXBoxController.rightBumper().toggleOnTrue(new CoralIntake(arm, armAngleChange).andThen(new RumbleForHalfSecend()));
     //    .alongWith(arm.setRumbleCoralInCommand().withTimeout(0.5)));
+      
 
+    
+        
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
        commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));
        commandXBoxController.a().whileTrue(new L1Command(armAngleChange, arm));

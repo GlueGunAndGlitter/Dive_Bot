@@ -43,7 +43,7 @@ public class L2Command extends Command {
       }
 
       elevator.setL2Position();
-      armAngleChange.setL2Position();
+      armAngleChange.setL2Position();;
 
 
       if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION - 0.5

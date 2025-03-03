@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,15 +23,24 @@ public class ArmAngleChange extends SubsystemBase {
   PIDController positionPID;
   TalonFXConfiguration motorConfig;
   double wantedPosition;
-  GenericEntry randomPosition;
-
+  final TrapezoidProfile m_profile = new TrapezoidProfile(
+   new TrapezoidProfile.Constraints(80, 160)
+  );
+  TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
   
+  final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
   public ArmAngleChange() {
     
     armAngleChangeMotor = new TalonFX(Constants.ArmAngleChangeConstants.ArmAngleChange_Motor_ID);
     positionPID = new PIDController(Constants.ArmAngleChangeConstants.KP_POSITION_PID, Constants.ArmAngleChangeConstants.KI_POSITION_PID, Constants.ArmAngleChangeConstants.KD_POSITION_PID);
     motorConfig = new TalonFXConfiguration();
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+
+     motorConfig.Slot0.kP = 2; 
+     motorConfig.Slot0.kI = 0; 
+     motorConfig.Slot0.kD = 0.2; 
+
     armAngleChangeMotor.getConfigurator().apply(motorConfig);
   }
 
@@ -42,6 +53,7 @@ public class ArmAngleChange extends SubsystemBase {
   public void resetToAbsolute(){
     armAngleChangeMotor.setPosition(0);
   }
+
 
 
 
@@ -60,6 +72,7 @@ public class ArmAngleChange extends SubsystemBase {
     return this.run(()-> zeroPosition());
   }
 
+
   public void setL1Position(){
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION);
   }
@@ -77,35 +90,13 @@ public class ArmAngleChange extends SubsystemBase {
   }
   
   public void setL4Position(){
-    setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION);
-  }
+    m_setpoint = m_profile.calculate(0.020, m_setpoint, Constants.ArmAngleChangeConstants.L4_POSITION_TRAPEZ);
+    
+    m_request.Position = m_setpoint.position;
+    m_request.Velocity = m_setpoint.velocity;
+    armAngleChangeMotor.setControl(m_request); 
+    }
   
-  public Command setIntakePositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.INTAKE_POSITION));
-  }
-  public Command setL1PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION));
-  }
-  public Command setL4PositionCommand(){
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION));
-  }
-
-  public Command setL2PositionCommand() {
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION));
-  }
-  public Command setL3PositionCommand() {
-    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION));
-  }
-  public Command setLowAlgeaCommand(){
-    return this.run(()-> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.LOW_ALGEA_POSITION));
-  }
-
-
-
-
-
-
-
 
   public double getPosition(){
     return armAngleChangeMotor.getPosition().getValueAsDouble();

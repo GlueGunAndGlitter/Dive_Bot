@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -42,7 +43,7 @@ public final class Constants {
         public static final int BEAM_BREAKE_ID = 3;
         public static final double L1_SPEEED = 0.07;
         public static final double OUT_SPEEED = 0.5;
-        public static final double INTAKE_SPEED = 0.15;
+        public static final double INTAKE_SPEED = 0.1;
         
     }
 
@@ -50,10 +51,14 @@ public final class Constants {
     public static final class ArmAngleChangeConstants {
         public static final int ArmAngleChange_Motor_ID =32;
         public static final double INTAKE_POSITION = -2.3;
+        public static final TrapezoidProfile.State INTAKE_POSITION_TRAPEZ = new TrapezoidProfile.State(-2.3, 0);
         public static final double L1_POSITION = 7.2;
+        public static final TrapezoidProfile.State L1_POSITION_TrapezINTAKE_POSITION_TRAPEZ = new TrapezoidProfile.State(7.2, 0);
         public static final double L2_ANGLE_POSITION = 3;
+        public static final TrapezoidProfile.State L2L3_ANGLE_POSITION_TRAPEZ = new TrapezoidProfile.State(3, 0);
         public static final double L3_ANGLE_POSITION = 3;
         public static final double L4_POSITION = -37;
+        public static final TrapezoidProfile.State L4_POSITION_TRAPEZ = new TrapezoidProfile.State(-37, 0);
         public static final double LOW_ALGEA_POSITION = 7.52;
         public static final double  KP_POSITION_PID = 0.05;
         public static final double  KI_POSITION_PID = 0;
@@ -91,8 +96,8 @@ public final class Constants {
 
 
     public static final class Swerve {
-        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.7, 0.7, 0.1);   // Vision trust factors
-        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.7, 0.7, 0.7);    // Odometry trust factors
+        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(1, 1, 1);   // Vision trust factors
+        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0, 0, 0);    // Odometry trust factors
         
                 
         public static final int pigeonID = 7;
@@ -176,7 +181,7 @@ public final class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 11;
             public static final int canCoderID = 21;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-40.4296875);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-41.8359375);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 
@@ -187,7 +192,7 @@ public final class Constants {
                 public static final int driveMotorID = 2;
                 public static final int angleMotorID = 12;
                 public static final int canCoderID = 22;
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(70.224609375);
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(70.6640625);
                 public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -197,7 +202,7 @@ public final class Constants {
                     public static final int driveMotorID = 3;
                     public static final int angleMotorID = 13;
                     public static final int canCoderID = 23;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(13.095703125);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(10.8984375);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -207,7 +212,7 @@ public final class Constants {
                     public static final int driveMotorID = 4;
                     public static final int angleMotorID = 14;
                     public static final int canCoderID = 24;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-1.93359375);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-24);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }

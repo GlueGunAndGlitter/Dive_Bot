@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.GregorianCalendar;
 import java.util.Optional;
 
 public class Swerve extends SubsystemBase {
@@ -153,6 +154,7 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             positions[mod.moduleNumber] = mod.getPosition();
         }
+
         return positions;
     }
 
@@ -169,6 +171,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getHeading(){
+        // return getGyroYaw();
         return poseEstimator.getEstimatedPosition().getRotation();
     }
 
@@ -181,7 +184,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command zeroHeadingCommand(){
-        return this.run(() -> zeroHeading());
+        return this.run(() -> resetPose(new Pose2d()));
     }
 
     public Rotation2d getGyroYaw() {
@@ -213,6 +216,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
+        System.out.println(getPose());
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
@@ -227,7 +231,9 @@ public class Swerve extends SubsystemBase {
         }
 
         // Update SmartDashboard for debugging
-    
+
+        SmartDashboard.putNumber("rotion", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("yow", getGyroYaw().getDegrees());
         SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
