@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.ejml.dense.row.misc.RrefGaussJordanRowPivot_DDRM;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -20,6 +22,7 @@ import frc.robot.commands.TeleopCommand.LevelsCommands.L1Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L2Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L3Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L4Command;
+import frc.robot.commands.autoTelopCommands.ReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
@@ -98,7 +101,7 @@ public class RobotContainer {
        commandXBoxController.rightBumper().toggleOnTrue(new CoralIntake(arm, armAngleChange).andThen(new RumbleForHalfSecend()));
     //    .alongWith(arm.setRumbleCoralInCommand().withTimeout(0.5)));
       
-
+       commandXBoxController.rightTrigger().whileTrue(new ReefAssist(s_Swerve));
     
         
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));

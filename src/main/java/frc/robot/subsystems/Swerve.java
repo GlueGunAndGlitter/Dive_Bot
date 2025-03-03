@@ -232,8 +232,8 @@ public class Swerve extends SubsystemBase {
 
         // Update SmartDashboard for debugging
 
-        SmartDashboard.putNumber("rotion", getPose().getRotation().getDegrees());
-        SmartDashboard.putNumber("yow", getGyroYaw().getDegrees());
+        SmartDashboard.putNumber("x", getPose().getX());
+        SmartDashboard.putNumber("y", getPose().getY());
         SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

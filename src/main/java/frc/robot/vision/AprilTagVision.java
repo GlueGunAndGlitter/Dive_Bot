@@ -42,7 +42,7 @@ public class AprilTagVision {
 
         // Load the field layout for AprilTag positions
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-
+        
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
             new Translation3d(-0.155, -0.215, 0.30),

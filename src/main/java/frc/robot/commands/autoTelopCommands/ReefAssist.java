@@ -7,6 +7,7 @@ import frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -48,7 +49,7 @@ public class ReefAssist extends Command {
         }else{
           isRedAlliance = false;
         }
-        target = getTarget();
+        target = new Pose2d(new Translation2d(13.87,5.17),Rotation2d.fromDegrees(60));
   
       }
 
