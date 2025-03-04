@@ -93,8 +93,8 @@ public final class Constants {
 
     }
     public static final class Swerve {
-        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);   // Vision trust factors
-        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.2, 0.2, 0.1);    // Odometry trust factors
+        public static final Matrix<N3, N1> poseStdDevs = VecBuilder.fill(0.7, 0.7, 0.1);   // Vision trust factors
+        public static final Matrix<N3, N1> odomStdDevs = VecBuilder.fill(0.7, 0.7, 0.7);    // Odometry trust factors
 
 
         

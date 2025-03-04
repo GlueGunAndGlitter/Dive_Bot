@@ -8,8 +8,13 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.ApriltagConstants;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -20,27 +25,23 @@ import frc.robot.subsystems.Swerve;
 public class ReefAsisst extends Command {
 
 
-  DoubleSupplier translationX;
-  DoubleSupplier translationY;
+
   PIDController orizontalPID;
   PIDController forwordBackwordsPID;
   PIDController rotionPID;
-  DoubleSupplier rotationSup;
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
   ArmAngleChange armAngleChange;
+  boolean isRedAlliance;
 
   /** Creates a new ReefAsisst. */
-  public ReefAsisst(Swerve swerve, DoubleSupplier translationX, DoubleSupplier translationY,DoubleSupplier rotationSup, ArmAngleChange armAngleChange) {
+  public ReefAsisst(Swerve swerve, ArmAngleChange armAngleChange) {
     orizontalPID = new PIDController(1, 0, 0);
     forwordBackwordsPID = new PIDController(0.4, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
 
     this.swerve = swerve;
-    this.translationX = translationX;
-    this.translationY = translationY;
-    this.rotationSup = rotationSup;
     this.armAngleChange = armAngleChange;
     
     // Use addRequirements() here to declare subsystem dependencies.
@@ -55,6 +56,7 @@ public class ReefAsisst extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
      targertIDChange = false;
 
   }
@@ -65,9 +67,6 @@ public class ReefAsisst extends Command {
     //System.out.println(Robot.isRight);
     //System.out.println(getAngle());
     armAngleChange.zeroPosition();
-    double translationVal = MathUtil.applyDeadband(translationX.getAsDouble(), Constants.stickDeadband);
-    double strafeVal = MathUtil.applyDeadband(translationY.getAsDouble(), Constants.stickDeadband);
-    double rotationVal = -MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
     double outputOrizontal;
     double outputforwordBackwords;
     double output;
@@ -83,10 +82,7 @@ public class ReefAsisst extends Command {
     output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
     
 
-     if (Robot.level == 1) {
-      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.095);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.34);
-     }else if (Robot.isRight) {
+     if (Robot.isRight) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
       outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.29);
     }else{
@@ -117,18 +113,7 @@ public class ReefAsisst extends Command {
   }
 
   private double getAngle(){
-    int id = -1;
-    int leftID = RobotContainer.aprilTag.leftGetId();
-    int rightID = RobotContainer.aprilTag.rightGetId();
-    if (leftID == rightID){
-      id = leftID;
-    }else if(leftID == -1 && rightID != -1){
-      id = rightID;
-    }else if(leftID != -1 && rightID == -1){
-      id = leftID;
-    }else{
-      id = rightID;
-    }
+    int id = getClosestAprilTag();
     //System.out.println(id);
 
 
@@ -161,5 +146,51 @@ public class ReefAsisst extends Command {
      return Math.abs(RobotContainer.aprilTag.rightGetY() - 0.03) < 0.03 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.15;
 
     }
+
+
+
   }
+
+
+    private int getClosestAprilTag() {
+        double[] distances;
+        int closestIndex = 0;
+
+        if (isRedAlliance) {
+            distances = new double[]{
+                distanceFromRobot(ApriltagConstants.redReef.TAG_6.x, ApriltagConstants.redReef.TAG_6.y),
+                distanceFromRobot(ApriltagConstants.redReef.TAG_7.x, ApriltagConstants.redReef.TAG_7.y),
+                distanceFromRobot(ApriltagConstants.redReef.TAG_8.x, ApriltagConstants.redReef.TAG_8.y),
+                distanceFromRobot(ApriltagConstants.redReef.TAG_9.x, ApriltagConstants.redReef.TAG_9.y),
+                distanceFromRobot(ApriltagConstants.redReef.TAG_10.x, ApriltagConstants.redReef.TAG_10.y),
+                distanceFromRobot(ApriltagConstants.redReef.TAG_11.x, ApriltagConstants.redReef.TAG_11.y)
+            };
+        } else {
+            distances = new double[]{
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_17.x, ApriltagConstants.blueReef.TAG_17.y),
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_18.x, ApriltagConstants.blueReef.TAG_18.y),
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_19.x, ApriltagConstants.blueReef.TAG_19.y),
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_20.x, ApriltagConstants.blueReef.TAG_20.y),
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_21.x, ApriltagConstants.blueReef.TAG_21.y),
+                distanceFromRobot(ApriltagConstants.blueReef.TAG_22.x, ApriltagConstants.blueReef.TAG_22.y)
+            };
+        }
+
+        for (int i = 1; i < distances.length; i++) {
+            if (distances[i] < distances[closestIndex]) {
+                closestIndex = i;
+            }
+        }
+
+        return isRedAlliance ? closestIndex + 6 : closestIndex + 17; 
+    }
+
+    private double distanceFromRobot(double x, double y) {
+        Pose2d robotPose = swerve.getPose();
+        return pythagoras(robotPose.getX() - x, robotPose.getY() - y);
+    }
+
+    private double pythagoras(double x, double y) {
+        return Math.sqrt(x * x + y * y);
+    }    
 }
