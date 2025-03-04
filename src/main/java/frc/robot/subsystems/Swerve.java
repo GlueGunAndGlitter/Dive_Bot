@@ -216,7 +216,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        System.out.println(getPose());
+        // System.out.println(getPose());
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
@@ -231,15 +231,12 @@ public class Swerve extends SubsystemBase {
         }
 
         // Update SmartDashboard for debugging
-
-        SmartDashboard.putNumber("x", getPose().getX());
-        SmartDashboard.putNumber("y", getPose().getY());
         SmartDashboard.putString("Robot Pose", getPose().toString());
-        for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        }
+        // for (SwerveModule mod : mSwerveMods) {
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        // }
 
 
     }

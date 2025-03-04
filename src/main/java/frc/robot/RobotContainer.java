@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RumbleForHalfSecend;
+import frc.robot.commands.TeleopCommand.ArmOut;
 import frc.robot.commands.TeleopCommand.ChoosableLevelCommand;
+import frc.robot.commands.TeleopCommand.ChoosableLevelNoArm;
 import frc.robot.commands.TeleopCommand.CoralIntake;
 import frc.robot.commands.TeleopCommand.GetOutAlgeHigh;
 import frc.robot.commands.TeleopCommand.GetOutAlgeLow;
@@ -22,6 +24,7 @@ import frc.robot.commands.TeleopCommand.LevelsCommands.L1Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L2Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L3Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L4Command;
+import frc.robot.commands.autoTelopCommands.ReefAssistArly;
 import frc.robot.commands.autoTelopCommands.ReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
 import frc.robot.subsystems.*;
@@ -102,7 +105,6 @@ public class RobotContainer {
     //    .alongWith(arm.setRumbleCoralInCommand().withTimeout(0.5)));
       
        commandXBoxController.rightTrigger().whileTrue(new ReefAssist(s_Swerve));
-    
         
        commandXBoxController.leftBumper().whileTrue(intakeAlgeaChangAngle.algeaIntakeCommand().alongWith(intake.intakeCommand()));
        commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));

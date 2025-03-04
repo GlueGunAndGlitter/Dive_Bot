@@ -45,16 +45,16 @@ public class AprilTagVision {
         
         // Define the camera positions on the robot
         robotToCam1 = new Transform3d(
-            new Translation3d(-0.155, -0.215, 0.30),
-            new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(180))
+            new Translation3d(-0.155, 0.215, 0.30),
+            new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0))
         );
         robotToCam2 = new Transform3d(
             new Translation3d(0.045, 0.27, 0.285),
-            new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(190))
+            new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0))
         );
         robotToCam3 = new Transform3d(   // Third Camera Transform
             new Translation3d(-0.04, 0.035, 0.93),
-            new Rotation3d(Math.toRadians(0), Math.toRadians(40), Math.toRadians(0))
+            new Rotation3d(Math.toRadians(0), Math.toRadians(40), Math.toRadians(180))
         );
 
         // Initialize pose estimators with strategy and camera-to-robot transforms

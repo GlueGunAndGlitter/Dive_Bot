@@ -166,11 +166,6 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putBoolean("limit swich state", input.get());
       SmartDashboard.putBoolean("niga swich", inputniga.get());
 
-      SmartDashboard.putNumber("motor crent", motor.getStatorCurrent().getValueAsDouble());
-      SmartDashboard.putNumber("motor posion",  motor.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("number pose", motorMashpeh.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("seppint",  -37);
-
     //max = Math.max(max, input.getVoltage());
     // This method will be called once per scheduler run
   }

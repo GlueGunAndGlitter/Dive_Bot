@@ -232,52 +232,55 @@ public final class Constants {
     public static final class ReefAssistConstants {
 
         public static final PIDConstants ROTATION_PID_VALUES = new PIDConstants(0.0055, 0.0, 0.00055);
-        public static final PIDConstants Y_PID_CONSTANTS = new PIDConstants(0.5, 0.0, 0.01);
-        public static final PIDConstants X_PID_CONSTANTS = new PIDConstants(0.5, 0.0, 0.01);
+        public static final PIDConstants Y_PID_CONSTANTS = new PIDConstants(0.2, 0.0, 0.0);
+        public static final PIDConstants X_PID_CONSTANTS = new PIDConstants(0.2, 0.0, 0.0);
 
 
-        static final Pose2d ID_6_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
-        static final Pose2d ID_6_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_6_TARGET_LEFT = new Pose2d(new Translation2d(13.21, 3.26), Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_6_TARGET_RIGHT = new Pose2d(new Translation2d(13.6, 2.53), Rotation2d.fromDegrees(-60));
 
-        static final Pose2d ID_7_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        static final Pose2d ID_7_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_7_TARGET_LEFT = new Pose2d(new Translation2d(13.85,3.76), Rotation2d.fromDegrees(0));
+        static final Pose2d ID_7_TARGET_RIGHT = new Pose2d(new Translation2d(14.62,3.75), Rotation2d.fromDegrees(0));
 
-        static final Pose2d ID_8_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));        
-        static final Pose2d ID_8_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
+        static final Pose2d ID_8_TARGET_LEFT = new Pose2d(new Translation2d(13.73,5.04),Rotation2d.fromDegrees(60));        
+        static final Pose2d ID_8_TARGET_RIGHT = new Pose2d(new Translation2d( 13.74,4.77), Rotation2d.fromDegrees(60));
 
-        static final Pose2d ID_9_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
-        static final Pose2d ID_9_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_9_TARGET_LEFT = new Pose2d(new Translation2d(12.90,4.84), Rotation2d.fromDegrees(120));
+        static final Pose2d ID_9_TARGET_RIGHT = new Pose2d(new Translation2d(12.75,4.99), Rotation2d.fromDegrees(120));
 
-        static final Pose2d ID_10_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
-        static final Pose2d ID_10_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_10_TARGET_LEFT = new Pose2d(new Translation2d(12.27,4.30), Rotation2d.fromDegrees(180));
+        static final Pose2d ID_10_TARGET_RIGHT = new Pose2d(new Translation2d(12.07 ,4.24), Rotation2d.fromDegrees(180));
 
-        static final Pose2d ID_11_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
-        static final Pose2d ID_11_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_11_TARGET_LEFT = new Pose2d(new Translation2d(12.43,3.48), Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_11_TARGET_RIGHT = new Pose2d(new Translation2d(12.38,3.28), Rotation2d.fromDegrees(-120));
         
-        static final Pose2d ID_17_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
-        static final Pose2d ID_17_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(60));
+        static final Pose2d ID_17_TARGET_LEFT = new Pose2d(new Translation2d(3.86,3.48), Rotation2d.fromDegrees(60));
+        static final Pose2d ID_17_TARGET_RIGHT = new Pose2d(new Translation2d(3.81,3.21), Rotation2d.fromDegrees(60));
 
-        static final Pose2d ID_18_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        static final Pose2d ID_18_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_18_TARGET_LEFT = new Pose2d(new Translation2d(3.70,4.30), Rotation2d.fromDegrees(0));
+        static final Pose2d ID_18_TARGET_RIGHT = new Pose2d(new Translation2d(3.50,4.24), Rotation2d.fromDegrees(0));
 
-        static final Pose2d ID_19_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
-        static final Pose2d ID_19_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_19_TARGET_LEFT = new Pose2d(new Translation2d(4.33,4.84), Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_19_TARGET_RIGHT = new Pose2d(new Translation2d(4.18,4.99), Rotation2d.fromDegrees(-60));
 
-        static final Pose2d ID_20_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
-        static final Pose2d ID_20_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_20_TARGET_LEFT = new Pose2d(new Translation2d(5.16,5.05), Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_20_TARGET_RIGHT = new Pose2d(new Translation2d(5.17,4.77), Rotation2d.fromDegrees(-120));
 
-        static final Pose2d ID_21_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
-        static final Pose2d ID_21_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_21_TARGET_LEFT = new Pose2d(new Translation2d(5.28,3.76), Rotation2d.fromDegrees(180));
+        static final Pose2d ID_21_TARGET_RIGHT = new Pose2d(new Translation2d(5.48,3.81), Rotation2d.fromDegrees(180));
         
-        static final Pose2d ID_22_TARGET_LEFT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
-        static final Pose2d ID_22_TARGET_RIGHT = new Pose2d(0, 0, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_22_TARGET_LEFT = new Pose2d(new Translation2d(5.04,2.94), Rotation2d.fromDegrees(120));
+        static final Pose2d ID_22_TARGET_RIGHT = new Pose2d(new Translation2d(5.02,2.51), Rotation2d.fromDegrees(120));
 
 
         public static final Map<Integer, Pose2d> LEFT_TARGETS = new HashMap<>();
         public static final Map<Integer, Pose2d> RIGHT_TARGETS = new HashMap<>();
         public static final double X_TOLERANCE = 0.05;
         public static final double Y_TOLERANCE = 0.05;
-        public static final double ROTATION_TOLERANCE = 0;
+        public static final double ROTATION_TOLERANCE = 5;
+        public static final double OPEN_X_TOLERANCE = 0.1;
+        public static final double OPEN_Y_TOLERANCE = 0.1;
+        public static final double OPEN_ROTATION_TOLERANCE = 10;
 
         static {
             // Populate LEFT_TARGETS

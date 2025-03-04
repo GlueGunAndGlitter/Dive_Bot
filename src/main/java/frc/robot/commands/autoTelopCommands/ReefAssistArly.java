@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ReefAssist extends Command {    
+public class ReefAssistArly extends Command {    
     private final Swerve s_Swerve;    
     private boolean isRedAlliance;
     private Pose2d target;
@@ -38,7 +38,7 @@ public class ReefAssist extends Command {
         Constants.ReefAssistConstants.X_PID_CONSTANTS.kD
     );
 
-    public ReefAssist(Swerve s_Swerve) {
+    public ReefAssistArly(Swerve s_Swerve) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
     }
@@ -51,12 +51,13 @@ public class ReefAssist extends Command {
           isRedAlliance = false;
         }
         target = new Pose2d(new Translation2d(5.79, 6.24), Rotation2d.fromDegrees(-123));
-
   
       }
 
     @Override
     public void execute() {
+        System.out.println(target);
+
         Pose2d robotPose = s_Swerve.getPose();
 
         double error = target.getRotation().getDegrees() - Math.IEEEremainder(s_Swerve.getHeading().getDegrees(), 360);
@@ -86,9 +87,9 @@ public class ReefAssist extends Command {
         Pose2d robotPose = s_Swerve.getPose();
         Transform2d error = robotPose.minus(target);
 
-        return Math.abs(error.getX()) < Constants.ReefAssistConstants.X_TOLERANCE &&
-               Math.abs(error.getY()) < Constants.ReefAssistConstants.Y_TOLERANCE &&
-               Math.abs(error.getRotation().getDegrees()) < Constants.ReefAssistConstants.ROTATION_TOLERANCE;
+        return Math.abs(error.getX()) < Constants.ReefAssistConstants.OPEN_X_TOLERANCE &&
+               Math.abs(error.getY()) < Constants.ReefAssistConstants.OPEN_Y_TOLERANCE &&
+               Math.abs(error.getRotation().getDegrees()) < Constants.ReefAssistConstants.OPEN_ROTATION_TOLERANCE;
     }
 
     private int getClosestAprilTag() {
