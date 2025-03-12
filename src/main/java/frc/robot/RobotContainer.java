@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RumbleForHalfSecend;
 import frc.robot.commands.TeleopCommand.ChoosableLevelCommand;
@@ -22,6 +23,8 @@ import frc.robot.commands.TeleopCommand.LevelsCommands.L3Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L4Command;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
 import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
+import frc.robot.commands.autonomousCommands.Intake;
+// import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
 import frc.robot.subsystems.*;
 import frc.robot.vision.AprilTagVision;
@@ -94,46 +97,33 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
 
-        soolyControler.start().whileTrue(armAngleChange.resetToAbsoluteCommand());
+        soolyControler.start().whileTrue(arm.stackCommand());
 
         commandXBoxController.start().whileTrue(s_Swerve.zeroHeadingCommand());
        commandXBoxController.rightBumper().toggleOnTrue(new CoralIntake(arm, armAngleChange).andThen(new RumbleForHalfSecend()));
     //    .alongWith(arm.setRumbleCoralInCommand().withTimeout(0.5)));
-       commandXBoxController.rightTrigger().whileTrue(new ReefAsisst
-       (
-        s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new ChoosableLevelCommand(arm, armAngleChange, elevator)));
+       commandXBoxController.rightTrigger().whileTrue(new ReefAsisst(s_Swerve, armAngleChange).andThen(new ChoosableLevelCommand(arm, armAngleChange, elevator)));
 
-
+       
     //    commandXBoxController.leftBumper().toggleOnTrue(new ArmRestOnMashpeh(armAngleChange, elevator));
-        commandXBoxController.leftBumper().whileTrue(intake.intakeCommand().alongWith(intakeAlgeaChangAngle.algeaIntakeCommand()));
-       commandXBoxController.leftTrigger().whileTrue(intake.OutakeCommand().alongWith(intakeAlgeaChangAngle.algeaOutakeCommand()));                                 
+    //    commandXBoxController.leftBumper().whileTrue(climb.rotateMotor());
+        soolyControler.back().toggleOnTrue(armAngleChange.setClimPositionCommand());
+        soolyControler.rightTrigger().whileTrue(climb.rotateMotormunusCommand());                                
 
-       commandXBoxController.a().whileTrue(new L1Command(armAngleChange, arm));
+       commandXBoxController.a().whileTrue(new L1Command(armAngleChange, arm,elevator));
        commandXBoxController.back().whileTrue(new ChoosableLevelCommand(arm, armAngleChange, elevator));
        //commandXBoxController.b().whileTrue(new L3Command(armAngleChange, arm, elevator));
         commandXBoxController.b().whileTrue(new ReefAsisst
        (
-        s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L2Command(armAngleChange, arm, elevator)));
+        s_Swerve, armAngleChange).andThen(new L2Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.y().whileTrue(new ReefAsisst
        (
-        s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L3Command(armAngleChange, arm, elevator)));
+        s_Swerve, armAngleChange).andThen(new L3Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.x().whileTrue(new ReefAsisst
        (
-        s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis), armAngleChange).andThen(new L4Command(armAngleChange, arm, elevator)));
+        s_Swerve, armAngleChange).andThen(new L4Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.b().whileTrue(new GetOutAlgeLow(elevator, arm, armAngleChange));
         commandXBoxController.y().whileTrue(new GetOutAlgeHigh(elevator, arm, armAngleChange));
@@ -149,7 +139,9 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         private void setDefaultCommands() {
-    
+            
+            climb.setDefaultCommand(climb.defaultCommand());
+
             arm.setDefaultCommand(arm.StopShootCommand());
     
             armAngleChange.setDefaultCommand(armAngleChange.zeroPositionCommad());
@@ -173,20 +165,26 @@ public class RobotContainer {
         }
     
     void registerCommand(){
-            NamedCommands.registerCommand("L3Auto", new L3Command(armAngleChange, arm, elevator));
+            NamedCommands.registerCommand("L3AutPo", new L3Command(armAngleChange, arm, elevator));
             NamedCommands.registerCommand("L4Auto", new L4Command(armAngleChange, arm, elevator).withTimeout(1.5));
-            NamedCommands.registerCommand("intakeAutonew", new CoralIntake(arm, armAngleChange));
+            NamedCommands.registerCommand("intakeAutonew12", new CoralIntake(arm, armAngleChange));
             NamedCommands.registerCommand("ZeroRobotAuto", new ZeroRobotCommand(armAngleChange, elevator));
-            NamedCommands.registerCommand("RightReefAssistAuto", new AutonomousReefAssist(
-                s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis),false));
-            NamedCommands.registerCommand("LeftReefAssistAuto", new AutonomousReefAssist(
-            s_Swerve,
-        () -> driver.getRawAxis(translationAxis), 
-        () -> driver.getRawAxis(strafeAxis), 
-        () -> driver.getRawAxis(rotationAxis),true));
+            NamedCommands.registerCommand("ElevatorL4", elevator.elevatorL4Command());
+            NamedCommands.registerCommand("IntakeNoPush", new Intake(arm, armAngleChange));
+            
+
+            NamedCommands.registerCommand("RightReefAssistAuto6", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 6));
+            NamedCommands.registerCommand("LeftReefAssistAuto6", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 6));
+            NamedCommands.registerCommand("LeftReefAssistAuto2", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 2));
+            NamedCommands.registerCommand("RightReefAssistAuto2", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 2));
+            NamedCommands.registerCommand("LeftReefAssistAuto4", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 4));
+            
+            NamedCommands.registerCommand("RightReefAssistAuto5", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 5));
+
+        // () -> driver.getRawAxis(translationAxis), 
+
+        // () -> driver.getRawAxis(strafeAxis), 
+        // () -> driver.getRawAxis(rotationAxis),true));
             
         
             

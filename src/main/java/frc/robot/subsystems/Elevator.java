@@ -80,7 +80,7 @@ public class Elevator extends SubsystemBase {
 
   public void zeroPosition(){
     if (Math.abs(RobotContainer.armAngleChange.getPosition()) < 8) {
-      set2MotorsPosition(0.1, 0);
+      set2MotorsPosition(0.2, 0);
     }else{
       set2MotorsPosition(0, 0);
 
@@ -118,7 +118,9 @@ public class Elevator extends SubsystemBase {
     return this.run(()-> set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L4_POSITION));
 
   }
-
+  public void setL1Position(){
+    set2MotorsPosition(0.3, 1);
+  }
   public void setL2Position(){
     set2MotorsPosition(0.3, Constants.ElevatorConstants.L2_POSITION);
   }
@@ -126,7 +128,7 @@ public class Elevator extends SubsystemBase {
     set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L3_POSITION);
   }
   public void setL4Position(){
-    set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L4_POSITION);
+    set2MotorsPositionSpeedy(0.9, Constants.ElevatorConstants.L4_POSITION);
   }
 
   @Override

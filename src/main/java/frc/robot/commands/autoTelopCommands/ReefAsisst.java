@@ -34,10 +34,11 @@ public class ReefAsisst extends Command {
   boolean targertIDChange = false;
   ArmAngleChange armAngleChange;
   boolean isRedAlliance;
+  int Id;
 
   /** Creates a new ReefAsisst. */
   public ReefAsisst(Swerve swerve, ArmAngleChange armAngleChange) {
-    orizontalPID = new PIDController(1, 0, 0);
+    orizontalPID = new PIDController(1.2, 0, 0);
     forwordBackwordsPID = new PIDController(0.4, 0, 0);
     rotionPID = new PIDController(0.02, 0, 0);
 
@@ -58,6 +59,8 @@ public class ReefAsisst extends Command {
   public void initialize() {
     isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
      targertIDChange = false;
+     angle = getAngle();
+     Id = getClosestAprilTag();
 
   }
 
@@ -74,22 +77,21 @@ public class ReefAsisst extends Command {
 
     
     
-    
-    if (RobotContainer.aprilTag.hasTarget() && !targertIDChange) {
-      angle = getAngle();
-      targertIDChange = true;
-    }
-    output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.02;
+    output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.01;
     
 
-     if (Robot.isRight) {
-      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(),0.16);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(), 0.29);
+    if (Robot.level == 1) {
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(Id),0.02);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(Id), 0.31);
+    } 
+    else if (Robot.isRight) {
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(Id),0.11);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(Id), 0.31);
     }else{
-     outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(),0.03);
-     outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(), 0.53);
+     outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(Id),-0.09);
+     outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(Id), 0.53);
     }
-    if (RobotContainer.aprilTag.hasTarget()) {
+    if (RobotContainer.aprilTag.hasID(Id)) {
       
       swerve.drive(
         new Translation2d(outputforwordBackwords, outputOrizontal).times(Constants.Swerve.maxSpeed), 
@@ -138,12 +140,15 @@ public class ReefAsisst extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-     if (Robot.isRight){
-     return Math.abs(RobotContainer.aprilTag.leftGetY() - 0.16) < 0.03 && Math.abs(RobotContainer.aprilTag.leftGetX() - 0.29) < 0.15;
+    if (Robot.level == 1) {
+      return Math.abs(RobotContainer.aprilTag.leftGetY(Id) -0.02) < 0.06 && Math.abs(RobotContainer.aprilTag.leftGetX(Id) - 0.31) < 0.2;
+    }
+     else if (Robot.isRight){
+     return Math.abs(RobotContainer.aprilTag.leftGetY(Id) - 0.11) < 0.05 && Math.abs(RobotContainer.aprilTag.leftGetX(Id) - 0.31) < 0.15;
     }
 
     else{
-     return Math.abs(RobotContainer.aprilTag.rightGetY() - 0.03) < 0.03 && Math.abs(RobotContainer.aprilTag.rightGetX() - 0.51) < 0.15;
+     return Math.abs(RobotContainer.aprilTag.rightGetY(Id) + 0.09) < 0.05 && Math.abs(RobotContainer.aprilTag.rightGetX(Id) - 0.53) < 0.15;
 
     }
 

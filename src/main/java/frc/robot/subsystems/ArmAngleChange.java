@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ArmAngleChange extends SubsystemBase {
   /** Creates a new ArmAngleChange. */
@@ -54,8 +55,14 @@ public class ArmAngleChange extends SubsystemBase {
   }
   
   public void zeroPosition(){
-    setPosition(armAngleChangeMotor, 0.7, 0);
+    if (RobotContainer.elevator.getPosition() < 0.6) {
+      
+      setPosition(armAngleChangeMotor, 0.7, -2.8);
+    }else{
+      setPosition(armAngleChangeMotor, 0.7, 1);
+    }
   }
+
   public Command zeroPositionCommad(){
     return this.run(()-> zeroPosition());
   }
@@ -64,9 +71,12 @@ public class ArmAngleChange extends SubsystemBase {
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION);
   }
   public void algi(){
-    setPosition(armAngleChangeMotor, 0.3, 10);
+    setPosition(armAngleChangeMotor, 0.7, 10);
   }
 
+  public void getDown(){
+    setPosition(armAngleChangeMotor, 0.3, 1);
+  }
   
   public void setL2Position(){
     setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION);
@@ -89,6 +99,9 @@ public class ArmAngleChange extends SubsystemBase {
   }
   public Command setL1PositionCommand(){
     return this.run(() -> setPosition(armAngleChangeMotor, 0.3, Constants.ArmAngleChangeConstants.L1_POSITION));
+  }
+  public Command setClimPositionCommand(){
+    return this.run(() -> setPosition(armAngleChangeMotor, 0.3, 8.2));
   }
   public Command setL4PositionCommand(){
     return this.run(() -> setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION));

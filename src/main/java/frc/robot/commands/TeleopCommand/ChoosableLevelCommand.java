@@ -6,6 +6,7 @@ package frc.robot.commands.TeleopCommand;
 
 import java.util.logging.Level;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -20,7 +21,8 @@ public class ChoosableLevelCommand extends Command {
   Arm arm;
   ArmAngleChange armAngleChange;
   Elevator elevator;
-
+  boolean L4Runing = false;
+  boolean armIsRuning = false;
   boolean isCoralChange;
 
   public  ChoosableLevelCommand(Arm arm, ArmAngleChange armAngleChange, Elevator elevator) {
@@ -39,12 +41,16 @@ public class ChoosableLevelCommand extends Command {
   @Override
   public void initialize() {
     isCoralChange = false;
+    L4Runing = false;
+    armIsRuning = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (!armIsRuning) {
+      arm.stopShoot();
+    }
     if (arm.isCoralIn()) {
       isCoralChange = true;
     }
@@ -53,11 +59,14 @@ public class ChoosableLevelCommand extends Command {
 
     switch (Robot.level) {
       case 1:
+        elevator.setL1Position();
         armAngleChange.setL1Position();
 
 
-        if (Math.abs(RobotContainer.armAngleChange.getPosition()) > Math.abs( Constants.ArmAngleChangeConstants.L1_POSITION) -0.5) {
+        if (Math.abs(RobotContainer.armAngleChange.getPosition()) > Math.abs( Constants.ArmAngleChangeConstants.L1_POSITION) -1.5) {
             RobotContainer.arm.outPutL1();
+            armIsRuning = true;
+
          }
 
 
@@ -67,8 +76,9 @@ public class ChoosableLevelCommand extends Command {
         armAngleChange.setL2Position();
 
 
-        if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION - 0.5
-        && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L2_POSITION - 0.5) {
+        if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L2_ANGLE_POSITION - 1
+        && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L2_POSITION - 1) {
+           armIsRuning = true;
            RobotContainer.arm.outPutL2L3();
         }
 
@@ -81,23 +91,33 @@ public class ChoosableLevelCommand extends Command {
 
         if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION -0.5
         && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L3_POSITION - 1) {
+            armIsRuning = true;
             arm.outPutL2L3();
        }
 
 
         break;
       case 4:
-        elevator.setL4Position();
+        if (!L4Runing) {
+          armAngleChange.getDown();
+        }
+
+        if (RobotContainer.armAngleChange.getPosition() > 0 || L4Runing) {
+          L4Runing = true;
+          elevator.setL4Position();
+        }
 
         if (RobotContainer.elevator.getPosition() > Constants.ArmAngleChangeConstants.CAN_OPEN_ARM) {
           armAngleChange.setL4Position();
         }
 
-        if (Math.abs(RobotContainer.armAngleChange.getPosition() -  Constants.ArmAngleChangeConstants.L4_POSITION) < 0.5
-        && Math.abs(RobotContainer.elevator.getPosition() - Constants.ElevatorConstants.L4_POSITION) < 0.5) {
-        RobotContainer.arm.outPutL4();
+        if (Math.abs(RobotContainer.armAngleChange.getPosition() -  Constants.ArmAngleChangeConstants.L4_POSITION) < 1.5
+        && Math.abs(RobotContainer.elevator.getPosition() - Constants.ElevatorConstants.L4_POSITION) < 1.5) {
+          armIsRuning = true;
+          RobotContainer.arm.outPutL4();
         }else{
-        RobotContainer.arm.outPutL4Slowwww();
+          armIsRuning = true;
+          RobotContainer.arm.outPutL4Slowwww();
         }
 
 
@@ -112,6 +132,7 @@ public class ChoosableLevelCommand extends Command {
         if (RobotContainer.armAngleChange.getPosition() > Constants.ArmAngleChangeConstants.L3_ANGLE_POSITION -0.5
         && RobotContainer.elevator.getPosition() > Constants.ElevatorConstants.L3_POSITION - 1) {
             arm.outPutL2L3();
+            armIsRuning = true;
        }
 
 

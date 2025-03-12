@@ -109,7 +109,7 @@ public class Arm extends SubsystemBase {
       }
       public Command stopCommand(){
         return this.run(() -> motor.set(0));
-      }
+       }
       public void outPutL1(){
         motor.set(Constants.ArmConstants.L1_SPEEED);
       }
@@ -120,19 +120,24 @@ public class Arm extends SubsystemBase {
       } 
 
       public void output(){
-        motor.set(-0.08);
+        motor.set(-0.07);
      }
 
      public void outputAlgi(){
-      motor.set(0.7);
+     motor.set(0.7);
    }
      
 
 
       public void intake(){
          motor.set(Constants.ArmConstants.INTAKE_SPEED);
-         motorMashpeh.set(0.5);
+         motorMashpeh.set(0.3);
       }
+
+      public void outputSack(){
+        motor.set(-Constants.ArmConstants.INTAKE_SPEED);
+        motorMashpeh.set(-0.05);
+     }
 
       public void slowIntake(){
         motor.set(0.05);
@@ -149,6 +154,9 @@ public class Arm extends SubsystemBase {
       return this.run(() -> motor.set(Constants.ArmConstants.INTAKE_SPEED));
     }
 
+    public Command stackCommand(){
+      return this.run(()-> outputSack());
+    }
       public Command outCommand(){
           return this.run(()-> motor.set(-Constants.ArmConstants.OUT_SPEEED));
     }

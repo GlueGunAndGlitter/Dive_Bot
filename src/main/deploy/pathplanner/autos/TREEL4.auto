@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RightReefAssistAuto"
+            "name": "RightReefAssistAuto5"
           }
         },
         {
@@ -44,13 +44,13 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeAutonew"
+            "name": "intakeAutonew12"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LeftReefAssistAuto"
+            "name": "RightReefAssistAuto6"
           }
         },
         {
@@ -81,13 +81,13 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeAutonew"
+            "name": "intakeAutonew12"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RightReefAssistAuto"
+            "name": "LeftReefAssistAuto6"
           }
         },
         {

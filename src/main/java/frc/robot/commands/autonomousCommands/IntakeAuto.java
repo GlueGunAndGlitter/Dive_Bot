@@ -5,23 +5,11 @@
 package frc.robot.commands.autonomousCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ArmAngleChange;
-import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ZeroRobotCommand extends Command {
-  /** Creates a new CloseArmElevator. */
-  ArmAngleChange angleChange;
-  Elevator elevator;
-  Arm arm;
-  
-  public ZeroRobotCommand(ArmAngleChange angleChange, Elevator elevator) {
-    this.angleChange = angleChange;
-    this.elevator = elevator;
-
-    addRequirements(this.angleChange);
-    addRequirements(this.elevator);
+public class IntakeAuto extends Command {
+  /** Creates a new IntakeAuto. */
+  public IntakeAuto() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,12 +19,7 @@ public class ZeroRobotCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    elevator.zeroPosition();
-    
-    angleChange.zeroPosition();
-    
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -45,6 +28,6 @@ public class ZeroRobotCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (angleChange.getPosition() > -2.8 && angleChange.getPosition() < 1)  && Math.abs(elevator.getPosition()) < 0.5;
+    return false;
   }
 }

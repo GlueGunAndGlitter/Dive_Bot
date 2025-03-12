@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "from line to side"
+            "pathName": "LeftSide"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RightReefAssistAuto"
+            "name": "RightReefAssistAuto2"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "feder to reef"
+                  "pathName": "to fesder left"
                 }
               },
               {
@@ -44,19 +44,38 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeAutonew"
+            "name": "intakeAutonew12"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LeftReefAssistAuto"
+            "name": "LeftReefAssistAuto2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "L4Auto"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "New New Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ZeroRobotAuto"
+                }
+              }
+            ]
           }
         }
       ]

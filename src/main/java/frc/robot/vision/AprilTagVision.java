@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class AprilTagVision {
 
@@ -57,7 +58,7 @@ public class AprilTagVision {
         );
         robotToCam3 = new Transform3d(   // Third Camera Transform
             new Translation3d(-0.04, 0.035, 0.93),
-            new Rotation3d(Math.toRadians(0), Math.toRadians(40), Math.toRadians(180))
+            new Rotation3d(Math.toRadians(0), Math.toRadians(20), Math.toRadians(180))
         );
 
         // Initialize pose estimators with strategy and camera-to-robot transforms
@@ -65,112 +66,94 @@ public class AprilTagVision {
         poseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam2);
         poseEstimator3 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam3);
     }
-    public double leftGetY(){
+
+    public boolean isRightCameraHasTarget(){
+        return DownRightCamera.getLatestResult().hasTargets();
+    }
+
+    public boolean isLeftCameraHasTarget(){
+        return DownLeftCamera.getLatestResult().hasTargets();
+    }
+    public double leftGetY(int Id){
+        var latestResult = DownRightCamera.getLatestResult();
+        if (latestResult.hasTargets()) {
+            for (int i = 0; i<latestResult.getTargets().size(); i++){
+                    if (latestResult.getTargets().get(i).getFiducialId() == Id) {
+                        return latestResult.getTargets().get(i).getBestCameraToTarget().getY();
+                    }
+                   }
+                   return 0;
+            }
+        return 0;
+
+    }
+
+    public double rightGetY(int Id){
+        int index = 0;
+        var latestResult = DownLeftCamera.getLatestResult();
+        if (latestResult.hasTargets()) {
+            for (int i = 0; i<latestResult.getTargets().size(); i++){
+                    if (latestResult.getTargets().get(i).getFiducialId() == Id) {
+                        return latestResult.getTargets().get(i).getBestCameraToTarget().getY();
+                    }
+                   }
+                   return 0;
+            }
+        return 0;
+    }
+
+    public double leftGetX(int Id){
         int index = 0;
         var latestResult = DownRightCamera.getLatestResult();
         if (latestResult.hasTargets()) {
-            for (int i = 1; i<latestResult.getTargets().size(); i++){
-                if((Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(latestResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(latestResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
+            for (int i = 0; i<latestResult.getTargets().size(); i++){
+                    if (latestResult.getTargets().get(i).getFiducialId() == Id) {
+                        return latestResult.getTargets().get(i).getBestCameraToTarget().getX();
+                    }
                    }
+                   return 0;
             }
-        var best = latestResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getY();
-        }
         return 0;
-
     }
-
-    public double rightGetY(){
+    public double rightGetX(int Id){
         int index = 0;
-        var letest = DownLeftCamera.getLatestResult();
-        if (letest.hasTargets()) {
-            for (int i = 1; i<letest.getTargets().size(); i++){
-                if((Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(letest.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(letest.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
+        var latestResult = DownLeftCamera.getLatestResult();
+        if (latestResult.hasTargets()) {
+            for (int i = 0; i<latestResult.getTargets().size(); i++){
+                    if (latestResult.getTargets().get(i).getFiducialId() == Id) {
+                        return latestResult.getTargets().get(i).getBestCameraToTarget().getX();
+                    }
                    }
+                   return 0;
             }
-        var best = letest.getTargets().get(index);
-        return best.getBestCameraToTarget().getY();
-        }
         return 0;
     }
 
-    public double leftGetX(){
-        int index = 0;
-        var DownRightCameraResult = DownRightCamera.getLatestResult();
-        if (DownRightCameraResult.hasTargets()) {
-            for (int i = 1; i< DownRightCameraResult.getTargets().size(); i++){
-                if((Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
+
+    public boolean hasID(int Id){
+        PhotonPipelineResult result;
+        if (!Robot.isRight) {
+            result = DownLeftCamera.getLatestResult();
+            for (int i = 0; i < result.getTargets().size(); i++) {
+                if (result.getTargets().get(i).getFiducialId() == Id) {
+                    return true;
+                }
             }
-        var best = DownRightCameraResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getX();
-        }
-        return 0;
-    }
-    public double rightGetX(){
-        int index = 0;
-        var DownRightCameraResult = DownLeftCamera.getLatestResult();
-        if (DownRightCameraResult.hasTargets()) {
-            for (int i = 1; i<DownRightCameraResult.getTargets().size(); i++){
-                if((Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
+            return false;
+
+        }else{
+            
+            result = DownRightCamera.getLatestResult();
+            for (int i = 0; i < result.getTargets().size(); i++) {
+                if (result.getTargets().get(i).getFiducialId() == Id) {
+                    return true;
+                }
             }
-        var best = DownRightCameraResult.getTargets().get(index);
-        return best.getBestCameraToTarget().getX();
+            return false;
+
         }
-        return 0;
     }
 
-    public int rightGetId(){
-        int index = 0;
-        var DownRightCameraResult = DownLeftCamera.getLatestResult();
-        if (DownRightCameraResult.hasTargets()) {
-            for (int i = 1; i< DownRightCameraResult.getTargets().size(); i++){
-                if((Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) >
-                    (Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = DownRightCameraResult.getTargets().get(index);
-        return best.getFiducialId();
-        }
-        return 0;
-    }
-    public int leftGetId(){
-        int index = 0;
-        var DownRightCameraResult = DownRightCamera.getLatestResult();
-        if (DownRightCameraResult.hasTargets()) {
-            for (int i = 1; i<DownRightCameraResult.getTargets().size(); i++){
-                if((Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(index).getBestCameraToTarget().getX(), 2)) > 
-                    (Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getY(),2) +
-                    Math.pow(DownRightCameraResult.getTargets().get(i).getBestCameraToTarget().getX(), 2))){
-                    index = i;
-                   }
-            }
-        var best = DownRightCameraResult.getTargets().get(index);
-        return best.getFiducialId();
-        }
-        return 0;
-    }
 
     public boolean hasTarget(){
         var firstCameraResult = DownLeftCamera.getLatestResult();

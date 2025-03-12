@@ -34,9 +34,12 @@ public class CoralIntake extends Command {
   public void execute() {
 
     armAngleChange.setIntakePosition();
-    if (!arm.isCoralIn()) {
+    if (!arm.isCoralIn() && !isCoralChange) {
         arm.intake();
-    }else{
+    }else if(arm.isCoralIn()){
+        isCoralChange = true;
+        arm.output();
+    }else if(isCoralChange && !arm.isCoralIn()){
       arm.stopShoot();
     }
   
@@ -51,6 +54,6 @@ public class CoralIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return arm.isCoralIn();
+    return !arm.isCoralIn() && isCoralChange;
   }
 }

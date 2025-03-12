@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +33,8 @@ import java.util.Optional;
 
 public class Swerve extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator; // Kalman-based pose estimator
+    private final SwerveDrivePoseEstimator poseEstimatorNoVision; 
+
     private final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
     private final Field2d m_field;
@@ -45,8 +48,8 @@ public class Swerve extends SubsystemBase {
             
             // Configure AutoBuilder
             AutoBuilder.configure(
-                this::getPose, 
-                this::resetPose, 
+                this::getPoseNoVision, 
+                this::resetPoseNoVision, 
                 this::getSpeeds, 
                 this::driveRobotRelative, 
                 new PPHolonomicDriveController(
@@ -93,6 +96,15 @@ public class Swerve extends SubsystemBase {
         
         
         poseEstimator = new SwerveDrivePoseEstimator(
+            Constants.Swerve.swerveKinematics,
+            getGyroYaw(),
+            getModulePositions(),
+            new Pose2d(), // Initial pose, usually (0,0) for autonomous start
+            Constants.Swerve.poseStdDevs,   // Standard deviations for vision
+            Constants.Swerve.odomStdDevs    // Standard deviations for odometry
+        );
+
+        poseEstimatorNoVision = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics,
             getGyroYaw(),
             getModulePositions(),
@@ -159,6 +171,10 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
+    public Pose2d getPoseNoVision() {
+        return poseEstimatorNoVision.getEstimatedPosition();
+    }
+
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
@@ -166,9 +182,15 @@ public class Swerve extends SubsystemBase {
     public void resetPose(Pose2d pose) {
         poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
+    public void resetPoseNoVision(Pose2d pose) {
+        poseEstimatorNoVision.resetPosition(getGyroYaw(), getModulePositions(), pose);
+    }
 
     public Rotation2d getHeading(){
-        return getGyroYaw();
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+            return Rotation2d.fromDegrees(180 + getPoseNoVision().getRotation().getDegrees());
+        } 
+        return getPoseNoVision().getRotation();
     }
 
     public void setHeading(Rotation2d heading){
@@ -176,7 +198,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroHeading(){
-        gyro.setYaw(0);
+        gyro.setYaw(180);
     }
 
     public Command zeroHeadingCommand(){
@@ -215,7 +237,7 @@ public class Swerve extends SubsystemBase {
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
-
+        poseEstimatorNoVision.update(getGyroYaw(), getModulePositions());
         // Get vision pose estimate and update if available
         Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
         if (visionPoseEstimate.isPresent()) {
@@ -226,7 +248,7 @@ public class Swerve extends SubsystemBase {
         }
 
         // Update SmartDashboard for debugging
-        SmartDashboard.putString("Robot Pose", getPose().toString());
+        // SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());

@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmAngleChange;
+import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L1Command extends Command {
@@ -16,12 +17,15 @@ public class L1Command extends Command {
   Arm arm;
   ArmAngleChange armAngleChange;
   boolean isCoralChange;
-
-  public L1Command(ArmAngleChange armAngleChange, Arm arm) {
+  Elevator elevator;
+  public 
+  L1Command(ArmAngleChange armAngleChange, Arm arm, Elevator elevator) {
     this.arm = arm;
     this.armAngleChange = armAngleChange;
+    this.elevator = elevator;
 
     addRequirements(this.arm);
+    addRequirements(this.elevator);
     addRequirements(this.armAngleChange);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,7 +37,7 @@ public class L1Command extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+      elevator.setL1Position();
       if (arm.isCoralIn()) {
         isCoralChange = true;
       }
@@ -42,7 +46,7 @@ public class L1Command extends Command {
       armAngleChange.setL1Position();
 
 
-      if (Math.abs(RobotContainer.armAngleChange.getPosition()) > Math.abs( Constants.ArmAngleChangeConstants.L1_POSITION) -0.5) {
+      if (Math.abs(RobotContainer.armAngleChange.getPosition()) > Math.abs( Constants.ArmAngleChangeConstants.L1_POSITION) - 1.5) {
           RobotContainer.arm.outPutL1();
        }
 
