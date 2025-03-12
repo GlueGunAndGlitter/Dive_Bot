@@ -8,12 +8,15 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -101,7 +104,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+
+
+
+  }
 
   @Override
   public void teleopInit() {
@@ -124,19 +132,19 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     System.out.println(level);
-    if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
+    if(RobotContainer.soolyXboxControler.getLeftBumperButton() || Keyboard.isLeftArrowPressed()){
       isRight = true;
-    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
+    }else if(RobotContainer.soolyXboxControler.getRightBumperButton() || Keyboard.isRightArrowPressed()){
       isRight = false;
     }
 
-    if (RobotContainer.soolyXboxControler.getAButton()) {
+    if (RobotContainer.soolyXboxControler.getAButton() || Keyboard.is1KeyPressed()) {
       level = 1;
-    }else if(RobotContainer.soolyXboxControler.getBButton()){
+    }else if(RobotContainer.soolyXboxControler.getBButton() || Keyboard.is2KeyPressed()){
       level = 2;
-    }else if(RobotContainer.soolyXboxControler.getYButton()){
+    }else if(RobotContainer.soolyXboxControler.getYButton() || Keyboard.is3KeyPressed()){
       level = 3;
-    }else if(RobotContainer.soolyXboxControler.getXButton()){
+    }else if(RobotContainer.soolyXboxControler.getXButton() || Keyboard.is4KeyPressed()){
       level = 4;
     }
 

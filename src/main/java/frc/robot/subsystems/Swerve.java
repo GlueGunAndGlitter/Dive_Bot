@@ -2,11 +2,14 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.RobotContainer;
 import frc.robot.vision.AprilTagVision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 
@@ -41,6 +44,9 @@ public class Swerve extends SubsystemBase {
     
 
     private final AprilTagVision visionEstimator;
+
+    boolean doRejectUpdate;
+   
 
     public Swerve() {
         try{
@@ -187,10 +193,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getHeading(){
-        if (DriverStation.getAlliance().get() == Alliance.Red) {
-            return Rotation2d.fromDegrees(180 + getPoseNoVision().getRotation().getDegrees());
-        } 
-        return getPoseNoVision().getRotation();
+       
+        return getPose().getRotation();
     }
 
     public void setHeading(Rotation2d heading){
@@ -234,18 +238,43 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
+
+        doRejectUpdate = false;
+        LimelightHelpers.PoseEstimate mt2 = RobotContainer.aprilTag.getEstimatedPose();
+
+
+        if(Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble()) > 360)
+  {
+    doRejectUpdate = true;
+    
+  }
+  if(mt2.tagCount == 0)
+  {
+    doRejectUpdate = true;
+  }
+  if(!doRejectUpdate)
+  {
+    poseEstimator.addVisionMeasurement(
+        mt2.pose,
+        mt2.timestampSeconds);
+  }
+
+
+
+
+
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
         poseEstimator.update(getGyroYaw(), getModulePositions());
         poseEstimatorNoVision.update(getGyroYaw(), getModulePositions());
         // Get vision pose estimate and update if available
-        Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
-        if (visionPoseEstimate.isPresent()) {
-            poseEstimator.addVisionMeasurement(
-                visionPoseEstimate.get(),
-                edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
-            );
-        }
+        // Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
+        // if (visionPoseEstimate.isPresent()) {
+        //     poseEstimator.addVisionMeasurement(
+        //         visionPoseEstimate.get(),
+        //         edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
+        //     );
+        // }
 
         // Update SmartDashboard for debugging
         // SmartDashboard.putString("Robot Pose", getPose().toString());
