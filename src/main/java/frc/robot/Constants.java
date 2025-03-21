@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -11,6 +14,7 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -22,6 +26,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.156;
+    public static final String LEFT_LIMELIGHT = "limelight-left";
+    public static final String RIGHT_LIMELIGHT = "limelight-right";
     
 
 
@@ -47,7 +53,7 @@ public final class Constants {
         public static final double L1_POSITION = 7.2;
         public static final double L2_ANGLE_POSITION = 3;
         public static final double L3_ANGLE_POSITION = 3;
-        public static final double L4_POSITION = -39;
+        public static double L4_POSITION = -39;
         public static final double LOW_ALGEA_POSITION = 7.52;
         public static final double  KP_POSITION_PID = 0.05;
         public static final double  KI_POSITION_PID = 0;
@@ -168,7 +174,7 @@ public final class Constants {
         /** Meters per Second */
         public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 7.0; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
@@ -179,18 +185,19 @@ public final class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 11;
             public static final int canCoderID = 21;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-45.087890625);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-41.220703125);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 
             }
             
             /** Front Right Module - Module 1 */
-            public static final class Mod1 { //TODO: This must be tuned to specific robot
+            public static final class 
+            Mod1 { //TODO: This must be tuned to specific robot
                 public static final int driveMotorID = 2;
                 public static final int angleMotorID = 12;
                 public static final int canCoderID = 22;
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(71.3671875);
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-175.25390625);
                 public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -200,7 +207,7 @@ public final class Constants {
                     public static final int driveMotorID = 3;
                     public static final int angleMotorID = 13;
                     public static final int canCoderID = 23;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(10.634765625);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(12.568359375);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -210,7 +217,7 @@ public final class Constants {
                     public static final int driveMotorID = 4;
                     public static final int angleMotorID = 14;
                     public static final int canCoderID = 24;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-10.72265625);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-136.318359375);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -226,6 +233,89 @@ public final class Constants {
         public static final PIDConstants rotationConstants = new PIDConstants(0.5, 0.0, 0);
     }
 
-  
+   public static final class ReefAssistConstants {
+
+        public static final PIDConstants ROTATION_PID_VALUES = new PIDConstants(0.0065, 0.0, 0);
+        public static final PIDConstants Y_PID_CONSTANTS = new PIDConstants(1, 0.0, 0
+        );
+        public static final PIDConstants X_PID_CONSTANTS = new PIDConstants(1, 0.0, 0
+        );
+
+        static final Pose2d ID_6_TARGET_LEFT = new Pose2d(13.67,2.31, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_6_TARGET_RIGHT = new Pose2d(13.95, 2.38, Rotation2d.fromDegrees(-60));
+        
+        
+
+        static final Pose2d ID_7_TARGET_LEFT = new Pose2d(14.9,3.76, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_7_TARGET_RIGHT = new Pose2d(14.89,4.06, Rotation2d.fromDegrees(0));
+
+        static final Pose2d ID_8_TARGET_LEFT = new Pose2d(14.21,5.44,Rotation2d.fromDegrees(60));        
+        static final Pose2d ID_8_TARGET_RIGHT = new Pose2d(13.95,5.61, Rotation2d.fromDegrees(60));
+
+        static final Pose2d ID_9_TARGET_LEFT = new Pose2d(12.43,5.73, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_9_TARGET_RIGHT = new Pose2d(12.15,5.59, Rotation2d.fromDegrees(120));
+
+        static final Pose2d ID_10_TARGET_LEFT = new Pose2d(11.25,4.30, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_10_TARGET_RIGHT = new Pose2d(11.24,4.00, Rotation2d.fromDegrees(180));
+
+        static final Pose2d ID_11_TARGET_LEFT = new Pose2d(11.88,2.66, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_11_TARGET_RIGHT = new Pose2d(12.20,2.39, Rotation2d.fromDegrees(-120));
+        
+        static final Pose2d ID_17_TARGET_LEFT = new Pose2d(0,0, Rotation2d.fromDegrees(60));
+        static final Pose2d ID_17_TARGET_RIGHT = new Pose2d(0,0, Rotation2d.fromDegrees(60));
+
+        static final Pose2d ID_18_TARGET_LEFT = new Pose2d(0,0, Rotation2d.fromDegrees(0));
+        static final Pose2d ID_18_TARGET_RIGHT = new Pose2d(0,0, Rotation2d.fromDegrees(0));
+
+        static final Pose2d ID_19_TARGET_LEFT = new Pose2d(4.02,5.30, Rotation2d.fromDegrees(-60));
+        static final Pose2d ID_19_TARGET_RIGHT = new Pose2d(3.86,5.085, Rotation2d.fromDegrees(-60));
+
+        static final Pose2d ID_20_TARGET_LEFT = new Pose2d(0,0, Rotation2d.fromDegrees(-120));
+        static final Pose2d ID_20_TARGET_RIGHT = new Pose2d(0,0, Rotation2d.fromDegrees(-120));
+
+        static final Pose2d ID_21_TARGET_LEFT = new Pose2d(0,0, Rotation2d.fromDegrees(180));
+        static final Pose2d ID_21_TARGET_RIGHT = new Pose2d(0,0, Rotation2d.fromDegrees(180));
+        
+        static final Pose2d ID_22_TARGET_LEFT = new Pose2d(0,0, Rotation2d.fromDegrees(120));
+        static final Pose2d ID_22_TARGET_RIGHT = new Pose2d(0,0, Rotation2d.fromDegrees(120));
+
+
+        public static final Map<Integer, Pose2d> LEFT_TARGETS = new HashMap<>();
+        public static final Map<Integer, Pose2d> RIGHT_TARGETS = new HashMap<>();
+        public static final double X_TOLERANCE = 0.025;
+        public static final double Y_TOLERANCE = 0.025;
+        public static final double ROTATION_TOLERANCE = 2;
+        public static final double OPEN_RADIUS = 2;
+
+        static {
+            // Populate LEFT_TARGETS
+            LEFT_TARGETS.put(6, ID_6_TARGET_LEFT);
+            LEFT_TARGETS.put(7, ID_7_TARGET_LEFT);
+            LEFT_TARGETS.put(8, ID_8_TARGET_LEFT);
+            LEFT_TARGETS.put(9, ID_9_TARGET_LEFT);
+            LEFT_TARGETS.put(10, ID_10_TARGET_LEFT);
+            LEFT_TARGETS.put(11, ID_11_TARGET_LEFT);
+            LEFT_TARGETS.put(17, ID_17_TARGET_LEFT);
+            LEFT_TARGETS.put(18, ID_18_TARGET_LEFT);
+            LEFT_TARGETS.put(19, ID_19_TARGET_LEFT);
+            LEFT_TARGETS.put(20, ID_20_TARGET_LEFT);
+            LEFT_TARGETS.put(21, ID_21_TARGET_LEFT);
+            LEFT_TARGETS.put(22, ID_22_TARGET_LEFT);
+        
+            // Populate RIGHT_TARGETS
+            RIGHT_TARGETS.put(6, ID_6_TARGET_RIGHT);
+            RIGHT_TARGETS.put(7, ID_7_TARGET_RIGHT);
+            RIGHT_TARGETS.put(8, ID_8_TARGET_RIGHT);
+            RIGHT_TARGETS.put(9, ID_9_TARGET_RIGHT);
+            RIGHT_TARGETS.put(10, ID_10_TARGET_RIGHT);
+            RIGHT_TARGETS.put(11, ID_11_TARGET_RIGHT);
+            RIGHT_TARGETS.put(17, ID_17_TARGET_RIGHT);
+            RIGHT_TARGETS.put(18, ID_18_TARGET_RIGHT);
+            RIGHT_TARGETS.put(19, ID_19_TARGET_RIGHT);
+            RIGHT_TARGETS.put(20, ID_20_TARGET_RIGHT);
+            RIGHT_TARGETS.put(21, ID_21_TARGET_RIGHT);
+            RIGHT_TARGETS.put(22, ID_22_TARGET_RIGHT);
+        }
+    }
 
 }

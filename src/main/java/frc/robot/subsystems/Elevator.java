@@ -86,7 +86,7 @@ public class Elevator extends SubsystemBase {
 
     }
   }
-  public Command zeroPositionCommand(){
+  public Command defaultCommand(){
     return this.run(() -> zeroPosition());
 
   }
@@ -128,7 +128,7 @@ public class Elevator extends SubsystemBase {
     set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L3_POSITION);
   }
   public void setL4Position(){
-    set2MotorsPositionSpeedy(0.9, Constants.ElevatorConstants.L4_POSITION);
+    set2MotorsPositionSpeedy(0.3, Constants.ElevatorConstants.L4_POSITION);
   }
 
   @Override

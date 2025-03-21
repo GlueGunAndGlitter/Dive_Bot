@@ -72,7 +72,7 @@ public class IntakeAlgeaChangAngle extends SubsystemBase {
 
 
 
-  public Command zeroPositionAlgeaCommand(){
+  public Command defaultCommand(){
     return this.run(() -> zeroPositionAlgea());
 
   }

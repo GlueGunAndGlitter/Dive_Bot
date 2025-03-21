@@ -29,7 +29,7 @@ public class IntakeAlgea extends SubsystemBase {
     intakeMotor.getConfigurator().apply(intakeConfiguration);
   }
 
-  public Command stopMotorsCommand(){
+  public Command defaultCommand(){
     return this.run(() -> intakeMotor.stopMotor());
   }
 

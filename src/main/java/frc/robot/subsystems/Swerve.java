@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.lib.LimelightHelpers;
+import frc.lib.LimelightHelpers.PoseEstimate;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
-import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.RobotContainer;
 import frc.robot.vision.AprilTagVision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -43,7 +43,6 @@ public class Swerve extends SubsystemBase {
     private final Field2d m_field;
     
 
-    private final AprilTagVision visionEstimator;
 
     boolean doRejectUpdate;
    
@@ -119,9 +118,9 @@ public class Swerve extends SubsystemBase {
             Constants.Swerve.odomStdDevs    // Standard deviations for odometry
         );
 
-        visionEstimator = new AprilTagVision(); // Initialize vision estimator
 
 
+    
 
 
     }
@@ -169,6 +168,7 @@ public class Swerve extends SubsystemBase {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : mSwerveMods){
             positions[mod.moduleNumber] = mod.getPosition();
+            positions[mod.moduleNumber].distanceMeters = -positions[mod.moduleNumber].distanceMeters;
         }
         return positions;
     }
@@ -185,6 +185,7 @@ public class Swerve extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    
     public void resetPose(Pose2d pose) {
         poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
@@ -192,9 +193,25 @@ public class Swerve extends SubsystemBase {
         poseEstimatorNoVision.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
+    public Rotation2d getHeadingAngle(){
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+            return Rotation2d.fromDegrees(
+                180 + 
+                
+                getPoseNoVision().getRotation().getDegrees());
+        } 
+        return getPoseNoVision().getRotation();
+    }
+
     public Rotation2d getHeading(){
-       
-        return getPose().getRotation();
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+            return Rotation2d.fromDegrees(
+                // 180 + 
+
+                getPoseNoVision().getRotation().getDegrees());
+        } 
+        return getPoseNoVision().getRotation();
+        
     }
 
     public void setHeading(Rotation2d heading){
@@ -206,7 +223,18 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command zeroHeadingCommand(){
-        return this.run(() -> zeroHeading());
+        return this.run(() -> gyro.setYaw(0));
+    }
+
+    public Command driveForword(){
+        return this.run(() -> drive(new Translation2d(-1,0), 0, false , true));
+    }
+    public Command niggaStop(){
+        return this.run(() -> drive(new Translation2d(0,0), 0, true , true));
+    }
+
+    public Command backWords(){
+        return this.run(() -> drive(new Translation2d(1,0), 0, false , true));
     }
 
     public Rotation2d getGyroYaw() {
@@ -237,27 +265,67 @@ public class Swerve extends SubsystemBase {
     }
 
     @Override
+
     public void periodic(){
+        poseEstimator.update(getGyroYaw(), getModulePositions());
 
         doRejectUpdate = false;
-        LimelightHelpers.PoseEstimate mt2 = RobotContainer.aprilTag.getEstimatedPose();
 
+        Optional<LimelightHelpers.PoseEstimate> mt2Left = RobotContainer.aprilTag.getEstimatedPose(Constants.LEFT_LIMELIGHT);
+        Optional<LimelightHelpers.PoseEstimate> mt2Right = RobotContainer.aprilTag.getEstimatedPose(Constants.RIGHT_LIMELIGHT);
 
-        if(Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble()) > 360)
-  {
-    doRejectUpdate = true;
-    
-  }
-  if(mt2.tagCount == 0)
-  {
-    doRejectUpdate = true;
-  }
-  if(!doRejectUpdate)
-  {
-    poseEstimator.addVisionMeasurement(
-        mt2.pose,
-        mt2.timestampSeconds);
-  }
+        // Optional<LimelightHelpers.PoseEstimate> mt2Right = RobotContainer.aprilTag.getEstimatedPose(Constants.RIGHT_LIMELIGHT); --------------------------------
+        
+        // Reject update if gyro angular velocity is too high
+        if (Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble()) > 360) {
+            doRejectUpdate = true;
+        }
+        
+        // Check if either Limelight has detected a tag
+        // SmartDashboard.putBoolean("isvalid", mt2Left.isPresent());
+        boolean leftValid;
+        if (mt2Left.isPresent()) {
+            
+             leftValid = mt2Left.get().tagCount > 0;
+        }else{
+            leftValid = false;
+        }
+
+        boolean rightValid;
+        if (mt2Right.isPresent()) {
+            
+            rightValid = mt2Right.get().tagCount > 0;
+       }else{
+           rightValid = false;
+       }
+
+        // SmartDashboard.putBoolean("niggaRight", rightValid);
+
+        if (!leftValid
+         && !rightValid 
+         ) {
+            doRejectUpdate = true;
+        }
+        
+        if (!doRejectUpdate) {
+            Pose2d poseToUse;
+            double timestampToUse;
+        
+            if (leftValid && rightValid) {
+                // Use the average pose if both are valid
+                Pose2d[] listPoses = {mt2Left.get().pose, mt2Right.get().pose};
+                poseToUse = RobotContainer.aprilTag.averagePose(listPoses);
+                timestampToUse = (mt2Left.get().timestampSeconds + mt2Right.get().timestampSeconds) / 2.0;
+            } else if (leftValid) {
+            
+                poseToUse = mt2Left.get().pose;
+                timestampToUse = mt2Left.get().timestampSeconds;
+            } else {
+                poseToUse = mt2Right.get().pose;
+                timestampToUse = mt2Right.get().timestampSeconds;
+            }
+            poseEstimator.addVisionMeasurement(poseToUse, timestampToUse);
+        }
 
 
 
@@ -265,19 +333,8 @@ public class Swerve extends SubsystemBase {
 
         m_field.setRobotPose(getPose());
         // Update the Kalman filter with odometry data
-        poseEstimator.update(getGyroYaw(), getModulePositions());
         poseEstimatorNoVision.update(getGyroYaw(), getModulePositions());
-        // Get vision pose estimate and update if available
-        // Optional<Pose2d> visionPoseEstimate = visionEstimator.getEstimatedGlobalPose(getPose());
-        // if (visionPoseEstimate.isPresent()) {
-        //     poseEstimator.addVisionMeasurement(
-        //         visionPoseEstimate.get(),
-        //         edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
-        //     );
-        // }
 
-        // Update SmartDashboard for debugging
-        // SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());

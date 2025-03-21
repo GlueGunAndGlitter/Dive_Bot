@@ -63,7 +63,7 @@ public class ArmAngleChange extends SubsystemBase {
     }
   }
 
-  public Command zeroPositionCommad(){
+  public Command defaultCommand(){
     return this.run(()-> zeroPosition());
   }
 
@@ -92,6 +92,10 @@ public class ArmAngleChange extends SubsystemBase {
   
   public void setL4Position(){
     setPosition(armAngleChangeMotor, 0.5, Constants.ArmAngleChangeConstants.L4_POSITION);
+  }
+
+  public void setBeforL4Position(){
+    setPosition(armAngleChangeMotor, 0.5, -30);
   }
   
   public Command setIntakePositionCommand(){

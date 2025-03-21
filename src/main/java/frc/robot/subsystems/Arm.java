@@ -95,6 +95,10 @@ public class Arm extends SubsystemBase {
       public void outPutL4(){
         motor.set(-Constants.ArmConstants.OUT_SPEEED);
       }
+
+      public Command outPutL4Command(){
+        return this.run(() -> outPutL4());
+      }
       public void outPutL4Slowwww(){
         motor.set(-0.03);
       }
@@ -166,7 +170,7 @@ public class Arm extends SubsystemBase {
     }
 
     
-      public Command StopShootCommand(){
+      public Command defaultCommand(){
         return this.run(()-> stopShoot());
   }
   @Override

@@ -131,20 +131,20 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println(level);
-    if(RobotContainer.soolyXboxControler.getLeftBumperButton() || Keyboard.isLeftArrowPressed()){
-      isRight = true;
-    }else if(RobotContainer.soolyXboxControler.getRightBumperButton() || Keyboard.isRightArrowPressed()){
+    // System.out.println(level);
+    if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
       isRight = false;
+    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
+      isRight = true;
     }
 
-    if (RobotContainer.soolyXboxControler.getAButton() || Keyboard.is1KeyPressed()) {
+    if (RobotContainer.soolyXboxControler.getAButton()) {
       level = 1;
-    }else if(RobotContainer.soolyXboxControler.getBButton() || Keyboard.is2KeyPressed()){
+    }else if(RobotContainer.soolyXboxControler.getBButton() ){
       level = 2;
-    }else if(RobotContainer.soolyXboxControler.getYButton() || Keyboard.is3KeyPressed()){
+    }else if(RobotContainer.soolyXboxControler.getYButton() ){
       level = 3;
-    }else if(RobotContainer.soolyXboxControler.getXButton() || Keyboard.is4KeyPressed()){
+    }else if(RobotContainer.soolyXboxControler.getXButton() ){
       level = 4;
     }
 
