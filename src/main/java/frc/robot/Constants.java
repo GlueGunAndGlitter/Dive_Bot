@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -11,6 +14,7 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -22,6 +26,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.156;
+    public static final double OPEN_RADUS = 2;
     
 
 
@@ -47,7 +52,7 @@ public final class Constants {
         public static final double L1_POSITION = 7.2;
         public static final double L2_ANGLE_POSITION = 3;
         public static final double L3_ANGLE_POSITION = 3;
-        public static final double L4_POSITION = -39;
+        public static double L4_POSITION = -39;
         public static final double LOW_ALGEA_POSITION = 7.52;
         public static final double  KP_POSITION_PID = 0.05;
         public static final double  KI_POSITION_PID = 0;
@@ -61,9 +66,9 @@ public final class Constants {
 
     public static final class ElevatorConstants {
         public static final double KP_POSITION_PID = 0.08;
-        public static final double L2_POSITION = 5.7;
-        public static final double L3_POSITION = 12.5;
-        public static final double L4_POSITION = 13.6;
+        public static final double L2_POSITION = 6.2;
+        public static final double L3_POSITION = 13.4;
+        public static final double L4_POSITION = 13.3;
         public static final int ELEVATOR_MOTOR1_ID = 51;
         public static final int ELEVATOR_MOTOR2_ID = 52;
 
@@ -166,20 +171,20 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 7; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
         public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
         /** Front Left Module - Module 0 */
-        public static final class Mod0 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 1;
-            public static final int angleMotorID = 11;
-            public static final int canCoderID = 21;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-45.087890625);
+            public static final class Mod0 { //TODO: This must be tuned to specific robot
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 12;
+            public static final int canCoderID = 22;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-42.36328125);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 
@@ -187,20 +192,20 @@ public final class Constants {
             
             /** Front Right Module - Module 1 */
             public static final class Mod1 { //TODO: This must be tuned to specific robot
-                public static final int driveMotorID = 2;
-                public static final int angleMotorID = 12;
-                public static final int canCoderID = 22;
-                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(71.3671875);
+                public static final int driveMotorID = 3;
+                public static final int angleMotorID = 13;
+                public static final int canCoderID = 23;
+                public static final Rotation2d angleOffset = Rotation2d.fromDegrees(170.419921875);
                 public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
                 
                 /** Back Left Module - Module 2 */
                 public static final class Mod2 { //TODO: This must be tuned to specific robot
-                    public static final int driveMotorID = 3;
-                    public static final int angleMotorID = 13;
-                    public static final int canCoderID = 23;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(10.634765625);
+                    public static final int driveMotorID = 2;
+                    public static final int angleMotorID = 11;
+                    public static final int canCoderID = 21;
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(11.07421875);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -210,7 +215,7 @@ public final class Constants {
                     public static final int driveMotorID = 4;
                     public static final int angleMotorID = 14;
                     public static final int canCoderID = 24;
-                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-10.72265625);
+                    public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-137.109375);
                     public static final SwerveModuleConstants constants = 
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
                 }
@@ -222,10 +227,45 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final PIDConstants translationConstants = new PIDConstants(0.1, 0.0, 0);
-        public static final PIDConstants rotationConstants = new PIDConstants(0.5, 0.0, 0);
+        public static final PIDConstants translationConstants = new PIDConstants(0.15, 0.0, 0);
+        public static final PIDConstants rotationConstants = new PIDConstants(1.2, 0.0, 0);
     }
 
+    public final class ReefAssistConstants {
+        // Declare static final Pose2d constants
+        public static final Pose2d TARGET_ID_6 = new Pose2d(13.898, 2.568, Rotation2d.fromDegrees(-60));
+        public static final Pose2d TARGET_ID_7 = new Pose2d(14.739, 4.024, Rotation2d.fromDegrees(0));
+        public static final Pose2d TARGET_ID_8 = new Pose2d(13.898, 5.479, Rotation2d.fromDegrees(60));
+        public static final Pose2d TARGET_ID_9 = new Pose2d(12.217, 5.479, Rotation2d.fromDegrees(120));
+        public static final Pose2d TARGET_ID_10 = new Pose2d(11.377, 4.024, Rotation2d.fromDegrees(180));
+        public static final Pose2d TARGET_ID_11 = new Pose2d(12.217, 2.568, Rotation2d.fromDegrees(-120));
+
+
+        public static final Pose2d TARGET_ID_17 = new Pose2d(3.583, 2.462, Rotation2d.fromDegrees(60));
+        public static final Pose2d TARGET_ID_18 = new Pose2d(2.682, 4.024, Rotation2d.fromDegrees(0));
+        public static final Pose2d TARGET_ID_19 = new Pose2d(3.583, 5.585, Rotation2d.fromDegrees(-60));
+        public static final Pose2d TARGET_ID_20 = new Pose2d(5.386, 5.585, Rotation2d.fromDegrees(-120));
+        public static final Pose2d TARGET_ID_21 = new Pose2d(6.288, 4.024, Rotation2d.fromDegrees(180));
+        public static final Pose2d TARGET_ID_22 = new Pose2d(5.583, 2.462, Rotation2d.fromDegrees(120));
+    
+        // Declare and initialize the static poseMap in a static block
+        public static final Map<Integer, Pose2d> poseMap = new HashMap<>();
+    
+        static {
+            poseMap.put(6, TARGET_ID_6);
+            poseMap.put(7, TARGET_ID_7);
+            poseMap.put(8, TARGET_ID_8);
+            poseMap.put(9, TARGET_ID_9);
+            poseMap.put(10, TARGET_ID_10);
+            poseMap.put(11, TARGET_ID_11);
+            poseMap.put(17, TARGET_ID_17);
+            poseMap.put(18, TARGET_ID_18);
+            poseMap.put(19, TARGET_ID_19);
+            poseMap.put(20, TARGET_ID_20);
+            poseMap.put(21, TARGET_ID_21);
+            poseMap.put(22, TARGET_ID_22);
+        }
+    }
   
 
 }

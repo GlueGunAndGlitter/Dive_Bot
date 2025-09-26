@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autoTelopCommands;
 
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,26 +29,34 @@ public class ReefAsisst extends Command {
 
   PIDController orizontalPID;
   PIDController forwordBackwordsPID;
-  PIDController rotionPID;
+
+  PIDController anglePID;
+  PIDController yPidController; 
+  PIDController xPidController;
+
+  Pose2d notSeeTarget;
+
+  double angleError;
+
   double angle = 0;
   Swerve swerve;
   boolean targertIDChange = false;
-  ArmAngleChange armAngleChange;
   boolean isRedAlliance;
   int Id;
 
   /** Creates a new ReefAsisst. */
-  public ReefAsisst(Swerve swerve, ArmAngleChange armAngleChange) {
-    orizontalPID = new PIDController(1.2, 0, 0);
+  public ReefAsisst(Swerve swerve) {
+    orizontalPID = new PIDController(1, 0, 0);
     forwordBackwordsPID = new PIDController(0.4, 0, 0);
-    rotionPID = new PIDController(0.02, 0, 0);
+
+    xPidController = new PIDController(0.4, 0, 0);
+    yPidController = new PIDController(0.4, 0, 0);
+    anglePID = new PIDController(0.0065, 0, 0);
 
     this.swerve = swerve;
-    this.armAngleChange = armAngleChange;
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.swerve);
-    addRequirements(this.armAngleChange);
   }
 
 
@@ -57,53 +66,73 @@ public class ReefAsisst extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
-     targertIDChange = false;
+     Constants.ArmAngleChangeConstants.L4_POSITION = -33;
+     Optional<Alliance> alliance = DriverStation.getAlliance();
+     isRedAlliance = alliance.isPresent() && alliance.get() == Alliance.Red;     targertIDChange = false;
      angle = getAngle();
      Id = getClosestAprilTag();
+     notSeeTarget = Constants.ReefAssistConstants.poseMap.get(Id);
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Pose2d robotPose = swerve.getPose();
+
     //System.out.println(Robot.isRight);
     //System.out.println(getAngle());
-    armAngleChange.zeroPosition();
     double outputOrizontal;
     double outputforwordBackwords;
     double output;
 
-
-    
-    
-    output = Math.IEEEremainder(angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360),360) * 0.01;
+    angleError = angle - Math.IEEEremainder(swerve.getHeading().getDegrees(), 360);
+    angleError = Math.IEEEremainder(angleError, 360); // Normalize error to -180 to 180
     
 
+    
+    double notSeeTargetXOutput = xPidController.calculate(robotPose.getX(), notSeeTarget.getX());
+    double notSeeTargetYOutput = yPidController.calculate(robotPose.getY(), notSeeTarget.getY());
+    output = anglePID.calculate(angleError, 0);
+
+  
     if (Robot.level == 1) {
       outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(Id),0.02);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(Id), 0.31);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetXForID(Id), 0.31);
     } 
     else if (Robot.isRight) {
-      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(Id),0.11);
-      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetX(Id), 0.31);
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(Id),-0.12);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetXForID(Id), 0.55);
     }else{
-     outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.rightGetY(Id),-0.09);
-     outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.rightGetX(Id), 0.53);
+      outputOrizontal = orizontalPID.calculate(RobotContainer.aprilTag.leftGetY(Id),0.07);
+      outputforwordBackwords = forwordBackwordsPID.calculate(RobotContainer.aprilTag.leftGetXForID(Id), 0.35);
     }
+
+    // if (Math.abs(outputOrizontal) > 0.7) {
+    //   outputOrizontal = 0.7 * Math.signum(outputOrizontal);
+    // }
+    //  if (outputforwordBackwords > 0.2) {
+    //   outputforwordBackwords = 0.2;
+    //  }
+
+     if (angleError > 7) {
+      outputforwordBackwords = 0;
+      outputOrizontal = 0;
+     }
+    //  System.out.println(notSeeTarget);
     if (RobotContainer.aprilTag.hasID(Id)) {
       
       swerve.drive(
         new Translation2d(outputforwordBackwords, outputOrizontal).times(Constants.Swerve.maxSpeed), 
-        -output * Constants.Swerve.maxAngularVelocity, 
+        output * Constants.Swerve.maxAngularVelocity, 
         false, 
         true);
       
     } else{
       swerve.drive(
-        new Translation2d(0, 0).times(Constants.Swerve.maxSpeed), 
-        0 * Constants.Swerve.maxAngularVelocity, 
-        true, 
+        new Translation2d(0.1, 0).times(Constants.Swerve.maxSpeed), 
+        output * Constants.Swerve.maxAngularVelocity, 
+        false, 
         true);
     }
   }
@@ -112,6 +141,7 @@ public class ReefAsisst extends Command {
   @Override
   public void end(boolean interrupted) {
      targertIDChange = false;
+     Constants.ArmAngleChangeConstants.L4_POSITION = -39;
   }
 
   private double getAngle(){
@@ -141,14 +171,14 @@ public class ReefAsisst extends Command {
   @Override
   public boolean isFinished() {
     if (Robot.level == 1) {
-      return Math.abs(RobotContainer.aprilTag.leftGetY(Id) -0.02) < 0.06 && Math.abs(RobotContainer.aprilTag.leftGetX(Id) - 0.31) < 0.2;
+      return Math.abs(RobotContainer.aprilTag.leftGetY(Id) -0.02) < 0.06 && Math.abs(RobotContainer.aprilTag.leftGetXForID(Id) - 0.31) < 0.2;
     }
      else if (Robot.isRight){
-     return Math.abs(RobotContainer.aprilTag.leftGetY(Id) - 0.11) < 0.05 && Math.abs(RobotContainer.aprilTag.leftGetX(Id) - 0.31) < 0.15;
-    }
-
-    else{
-     return Math.abs(RobotContainer.aprilTag.rightGetY(Id) + 0.09) < 0.05 && Math.abs(RobotContainer.aprilTag.rightGetX(Id) - 0.53) < 0.15;
+       return Math.abs(RobotContainer.aprilTag.rightGetY(Id) + 0.12) < 0.04 && Math.abs(RobotContainer.aprilTag.rightGetXForID(Id) - 0.55) < 0.1;
+      }
+      
+      else{
+      return Math.abs(RobotContainer.aprilTag.leftGetY(Id) - 0.07) < 0.04 && Math.abs(RobotContainer.aprilTag.leftGetXForID(Id) - 0.35) < 0.1;
 
     }
 

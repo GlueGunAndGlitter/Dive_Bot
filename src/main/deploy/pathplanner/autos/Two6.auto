@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "from line to side"
+            "pathName": "RightSide"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RightReefAssistAuto6"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L4Auto"
+            "name": "LeftReefAssistAuto5"
           }
         },
         {
@@ -29,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "feder to reef"
+                  "pathName": "RightToFeder"
                 }
               },
               {
@@ -54,19 +48,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "L4Auto"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "feder to reef"
+                  "pathName": "reefToFederRight"
                 }
               },
               {
@@ -87,13 +75,7 @@
         {
           "type": "named",
           "data": {
-            "name": "LeftReefAssistAuto6"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L3AutPo"
+            "name": "RightReefAssistAuto6"
           }
         }
       ]

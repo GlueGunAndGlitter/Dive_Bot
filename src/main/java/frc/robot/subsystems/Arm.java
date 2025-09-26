@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Arm extends SubsystemBase {
 //   /** Creates a new Arm. */
@@ -38,8 +39,7 @@ public class Arm extends SubsystemBase {
   final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
 
 
-  DigitalInput input = new DigitalInput(1);
-  DigitalInput inputniga = new DigitalInput(3);
+  DigitalInput input = new DigitalInput(8);
 
     //DigitalInput beamBrake = new DigitalInput(4);
 
@@ -92,6 +92,20 @@ public class Arm extends SubsystemBase {
         return this.run(()-> motorMashpeh.setPosition(0));
       }
 
+      public void L4Out(){
+        if (Math.abs(RobotContainer.armAngleChange.getPosition() -  Constants.ArmAngleChangeConstants.L4_POSITION) < 1.5
+        && Math.abs(RobotContainer.elevator.getPosition() - Constants.ElevatorConstants.L4_POSITION) < 1.5) {
+          RobotContainer.arm.outPutL4();
+        }else{
+          RobotContainer.arm.outPutL4Slowwww();
+        }
+
+      }
+
+      public Command L4OutCommand(){
+        return this.run(() -> L4Out());
+      }
+
       public void outPutL4(){
         motor.set(-Constants.ArmConstants.OUT_SPEEED);
       }
@@ -116,7 +130,7 @@ public class Arm extends SubsystemBase {
 
       public boolean isCoralIn(){
         // return false;
-        return !inputniga.get();
+        return !input.get();
       } 
 
       public void output(){
@@ -166,18 +180,13 @@ public class Arm extends SubsystemBase {
     }
 
     
-      public Command StopShootCommand(){
+      public Command defaultCommand(){
         return this.run(()-> stopShoot());
   }
   @Override
   public void periodic() {
-      SmartDashboard.putBoolean("limit swich state", input.get());
-      SmartDashboard.putBoolean("niga swich", inputniga.get());
+      // SmartDashboard.putBoolean("limit swich state", input.get());
 
-      SmartDashboard.putNumber("motor crent", motor.getStatorCurrent().getValueAsDouble());
-      SmartDashboard.putNumber("motor posion",  motor.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("number pose", motorMashpeh.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("seppint",  -37);
 
     //max = Math.max(max, input.getVoltage());
     // This method will be called once per scheduler run

@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import java.security.spec.DSAGenParameterSpec;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   public static int level = 3;
   public static boolean isRight = true;
   public static GenericEntry intakeHigherMotorSpeed;
+  public static boolean isClimb = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -49,7 +52,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     
     robotContainer = new RobotContainer();
-    smartDashboard();
 
 
 
@@ -122,12 +124,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
-    System.out.println(level);
+    
     if(RobotContainer.soolyXboxControler.getLeftBumperButton()){
-      isRight = true;
-    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
       isRight = false;
+    }else if(RobotContainer.soolyXboxControler.getRightBumperButton()){
+      isRight = true;
     }
 
     if (RobotContainer.soolyXboxControler.getAButton()) {
@@ -139,7 +140,7 @@ public class Robot extends TimedRobot {
     }else if(RobotContainer.soolyXboxControler.getXButton()){
       level = 4;
     }
-
+    SmartDashboard.putNumber("level", level);
   }
 
   @Override
@@ -153,10 +154,5 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
 
-  public void smartDashboard() {
-    intakeHigherMotorSpeed = Shuffleboard.getTab("Transportation").add("Higher motor speed", 0.7)
-    .withWidget(BuiltInWidgets.kTextView)
-    .getEntry();
-  }
 
 }

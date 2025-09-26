@@ -79,7 +79,7 @@ public class Swerve extends SubsystemBase {
         
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
-        gyro.setYaw(0);
+        gyro.setYaw(180);
         
         m_field = new Field2d();
         SmartDashboard.putData("Field", m_field);
@@ -188,9 +188,9 @@ public class Swerve extends SubsystemBase {
 
     public Rotation2d getHeading(){
         if (DriverStation.getAlliance().get() == Alliance.Red) {
-            return Rotation2d.fromDegrees(180 + getPoseNoVision().getRotation().getDegrees());
+            return Rotation2d.fromDegrees(getPoseNoVision().getRotation().getDegrees() + 180);
         } 
-        return getPoseNoVision().getRotation();
+        return Rotation2d.fromDegrees(getPoseNoVision().getRotation().getDegrees());
     }
 
     public void setHeading(Rotation2d heading){
@@ -198,11 +198,19 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroHeading(){
-        gyro.setYaw(180);
+        if (DriverStation.getAlliance().get() == Alliance.Red) {
+            gyro.setYaw(180);
+        }else{
+            gyro.setYaw(0);
+        }
     }
 
     public Command zeroHeadingCommand(){
         return this.run(() -> zeroHeading());
+    }
+
+    public Command stopDrive(){
+        return this.run(() -> drive(new Translation2d(0,0),0,true,true));
     }
 
     public Rotation2d getGyroYaw() {
@@ -246,7 +254,7 @@ public class Swerve extends SubsystemBase {
                 edu.wpi.first.wpilibj.Timer.getFPGATimestamp()
             );
         }
-
+        // System.out.println(getHeading().getDegrees());
         // Update SmartDashboard for debugging
         // SmartDashboard.putString("Robot Pose", getPose().toString());
         for (SwerveModule mod : mSwerveMods) {

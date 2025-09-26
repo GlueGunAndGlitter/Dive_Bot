@@ -5,27 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "middleL4"
+            "pathName": "middle"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "LeftReefAssistAuto4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L4Auto"
           }
         }
       ]

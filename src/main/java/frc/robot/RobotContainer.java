@@ -10,12 +10,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RumbleForHalfSecend;
+import frc.robot.commands.TeleopCommand.ActiveClimb;
 import frc.robot.commands.TeleopCommand.ChoosableLevelCommand;
 import frc.robot.commands.TeleopCommand.CoralIntake;
+import frc.robot.commands.TeleopCommand.CoralOut;
 import frc.robot.commands.TeleopCommand.GetOutAlgeHigh;
 import frc.robot.commands.TeleopCommand.GetOutAlgeLow;
+import frc.robot.commands.TeleopCommand.PreOpen;
 import frc.robot.commands.TeleopCommand.TeleopSwerve;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L1Command;
 import frc.robot.commands.TeleopCommand.LevelsCommands.L2Command;
@@ -24,6 +28,7 @@ import frc.robot.commands.TeleopCommand.LevelsCommands.L4Command;
 import frc.robot.commands.autoTelopCommands.ReefAsisst;
 import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
 import frc.robot.commands.autonomousCommands.Intake;
+import frc.robot.commands.autonomousCommands.ReefAsisstWithPreOpen;
 // import frc.robot.commands.autonomousCommands.AutonomousReefAssist;
 import frc.robot.commands.autonomousCommands.ZeroRobotCommand;
 import frc.robot.subsystems.*;
@@ -58,8 +63,8 @@ public class RobotContainer {
     /* Subsystems */
     public static final Swerve s_Swerve = new Swerve();
     public static final Elevator elevator = new Elevator();
-    public static final IntakeAlgeaChangAngle intakeAlgeaChangAngle = new IntakeAlgeaChangAngle();
-    public static final IntakeAlgea intake = new IntakeAlgea();
+    // public static final IntakeAlgeaChangAngle intakeAlgeaChangAngle = new IntakeAlgeaChangAngle();
+    // public static final IntakeAlgea intake = new IntakeAlgea();
     public static final ArmAngleChange armAngleChange = new ArmAngleChange();
     public static final Arm arm = new Arm();
     public static final LEDSubsystem LED_SUBSYSTEM = new LEDSubsystem();
@@ -102,28 +107,29 @@ public class RobotContainer {
         commandXBoxController.start().whileTrue(s_Swerve.zeroHeadingCommand());
        commandXBoxController.rightBumper().toggleOnTrue(new CoralIntake(arm, armAngleChange).andThen(new RumbleForHalfSecend()));
     //    .alongWith(arm.setRumbleCoralInCommand().withTimeout(0.5)));
-       commandXBoxController.rightTrigger().whileTrue(new ReefAsisst(s_Swerve, armAngleChange).andThen(new ChoosableLevelCommand(arm, armAngleChange, elevator)));
+       commandXBoxController.rightTrigger().whileTrue((new ReefAsisst(s_Swerve).andThen(new CoralOut(arm).alongWith(s_Swerve.stopDrive())))
+       .alongWith(new PreOpen(armAngleChange, elevator)));
 
        
     //    commandXBoxController.leftBumper().toggleOnTrue(new ArmRestOnMashpeh(armAngleChange, elevator));
     //    commandXBoxController.leftBumper().whileTrue(climb.rotateMotor());
-        soolyControler.back().toggleOnTrue(armAngleChange.setClimPositionCommand());
+        soolyControler.back().toggleOnTrue(armAngleChange.setClimPositionCommand().alongWith(new ActiveClimb()));
         soolyControler.rightTrigger().whileTrue(climb.rotateMotormunusCommand());                                
 
        commandXBoxController.a().whileTrue(new L1Command(armAngleChange, arm,elevator));
        commandXBoxController.back().whileTrue(new ChoosableLevelCommand(arm, armAngleChange, elevator));
        //commandXBoxController.b().whileTrue(new L3Command(armAngleChange, arm, elevator));
-        commandXBoxController.b().whileTrue(new ReefAsisst
-       (
-        s_Swerve, armAngleChange).andThen(new L2Command(armAngleChange, arm, elevator)));
+    //     commandXBoxController.b().whileTrue(new ReefAsisst
+    //    (
+    //     s_Swerve, armAngleChange).andThen(new L2Command(armAngleChange, arm, elevator)));
 
-        commandXBoxController.y().whileTrue(new ReefAsisst
-       (
-        s_Swerve, armAngleChange).andThen(new L3Command(armAngleChange, arm, elevator)));
+    //     commandXBoxController.y().whileTrue(new ReefAsisst
+    //    (
+    //     s_Swerve, armAngleChange).andThen(new L3Command(armAngleChange, arm, elevator)));
 
-        commandXBoxController.x().whileTrue(new ReefAsisst
-       (
-        s_Swerve, armAngleChange).andThen(new L4Command(armAngleChange, arm, elevator)));
+    //     commandXBoxController.x().whileTrue(new ReefAsisst
+    //    (
+    //     s_Swerve, armAngleChange).andThen(new L4Command(armAngleChange, arm, elevator)));
 
         commandXBoxController.b().whileTrue(new GetOutAlgeLow(elevator, arm, armAngleChange));
         commandXBoxController.y().whileTrue(new GetOutAlgeHigh(elevator, arm, armAngleChange));
@@ -138,19 +144,21 @@ public class RobotContainer {
          *
          * @return the command to run in autonomous
          */
+
+
         private void setDefaultCommands() {
             
             climb.setDefaultCommand(climb.defaultCommand());
 
-            arm.setDefaultCommand(arm.StopShootCommand());
+            arm.setDefaultCommand(arm.defaultCommand());
     
-            armAngleChange.setDefaultCommand(armAngleChange.zeroPositionCommad());
+            armAngleChange.setDefaultCommand(armAngleChange.defaultCommand());
     
-            elevator.setDefaultCommand(elevator.zeroPositionCommand());
+            elevator.setDefaultCommand(elevator.defaultCommand());
     
-            intake.setDefaultCommand(intake.stopMotorsCommand());
+            // intake.setDefaultCommand(intake.defaultCommand());
             
-            intakeAlgeaChangAngle.setDefaultCommand(intakeAlgeaChangAngle.zeroPositionAlgeaCommand());
+            // intakeAlgeaChangAngle.setDefaultCommand(intakeAlgeaChangAngle.defaultCommand());
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
@@ -173,13 +181,27 @@ public class RobotContainer {
             NamedCommands.registerCommand("IntakeNoPush", new Intake(arm, armAngleChange));
             
 
-            NamedCommands.registerCommand("RightReefAssistAuto6", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 6));
-            NamedCommands.registerCommand("LeftReefAssistAuto6", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 6));
-            NamedCommands.registerCommand("LeftReefAssistAuto2", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 2));
-            NamedCommands.registerCommand("RightReefAssistAuto2", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 2));
-            NamedCommands.registerCommand("LeftReefAssistAuto4", new AutonomousReefAssist(s_Swerve, armAngleChange, true, 4));
+        
+            NamedCommands.registerCommand("LeftReefAssistAuto3", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 3, true, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));
+            NamedCommands.registerCommand("RightReefAssistAuto2", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 2, false, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));
+            NamedCommands.registerCommand("LeftReefAssistAuto2", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 2, true, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));       
+            NamedCommands.registerCommand("LeftReefAssistAuto4", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 4, true, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(2.5).alongWith(s_Swerve.stopDrive().withTimeout(2.5))));
+            NamedCommands.registerCommand("LeftReefAssistAuto6", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 6, true, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));
+            NamedCommands.registerCommand("RightReefAssistAuto6", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 6, false, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));
+            NamedCommands.registerCommand("LeftReefAssistAuto5", new ReefAsisstWithPreOpen(s_Swerve, armAngleChange, 5, true, elevator)
+            .andThen(arm.L4OutCommand().withTimeout(1.3).alongWith(s_Swerve.stopDrive().withTimeout(1.3))));
+
+
             
-            NamedCommands.registerCommand("RightReefAssistAuto5", new AutonomousReefAssist(s_Swerve, armAngleChange, false, 5));
+
+
+
 
         // () -> driver.getRawAxis(translationAxis), 
 
